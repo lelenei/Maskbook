@@ -1,6 +1,7 @@
 import { ChainId } from '../../../web3/types'
 
 export * from './0x'
+export * from './1inch'
 export * from './trending'
 export * from './uniswap'
 
@@ -16,4 +17,4 @@ export const TRADE_CONSTANTS = {
 
 export const MIN_SLIPPAGE_TOLERANCE = 10 // bips
 export const DEFAULT_SLIPPAGE_TOLERANCE = 50 // bips
-export const MAX_SLIPPAGE_TOLERANCE = 100 // bips
+export const MAX_SLIPPAGE_TOLERANCE = 500 // bips

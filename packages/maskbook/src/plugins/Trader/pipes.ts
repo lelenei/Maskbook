@@ -31,23 +31,27 @@ export function resolveDataProviderLink(dataProvider: DataProvider) {
     }
 }
 
-export function resolvetradeProviderName(tradeProvider: TradeProvider) {
+export function resolveTradeProviderName(tradeProvider: TradeProvider) {
     switch (tradeProvider) {
         case TradeProvider.UNISWAP:
             return 'Uniswap'
         case TradeProvider.ZRX:
-            return '0x'
+            return 'ZRX (0x)'
+        case TradeProvider.ONE_INCH:
+            return '1inch'
         default:
             unreachable(tradeProvider)
     }
 }
 
-export function resolvetradeProviderLink(tradeProvider: TradeProvider) {
+export function resolveTradeProviderLink(tradeProvider: TradeProvider) {
     switch (tradeProvider) {
         case TradeProvider.UNISWAP:
             return 'https://uniswap.org/'
         case TradeProvider.ZRX:
             return 'https://0x.org/'
+        case TradeProvider.ONE_INCH:
+            return 'https://1inch.exchange/'
         default:
             unreachable(tradeProvider)
     }
@@ -61,7 +65,7 @@ export function resolveDaysName(days: number) {
     return `${days}d`
 }
 
-export function resolveSwapSourceName(swapSource: TradePool) {
+export function resolveTradePoolName(swapSource: TradePool) {
     const SWAP_SOURCE_NAME_MAP: EnumRecord<TradePool, string> = {
         [TradePool.ZRX]: 'ZRX',
         [TradePool.Uniswap]: 'Uniswap',

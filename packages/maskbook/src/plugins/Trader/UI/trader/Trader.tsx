@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react'
-import { makeStyles, Theme, createStyles, CircularProgress, IconButton } from '@material-ui/core'
+import { makeStyles, Theme, createStyles, CircularProgress } from '@material-ui/core'
 import BigNumber from 'bignumber.js'
-import { Settings } from 'react-feather'
 import { useStylesExtends } from '../../../../components/custom-ui-helper'
 import { useToken } from '../../../../web3/hooks/useToken'
 import { Token, EthereumTokenType } from '../../../../web3/types'
@@ -15,11 +14,10 @@ import { useERC20TokenApproveCallback, ApproveState } from '../../../../web3/hoo
 import { useComputedApprove } from '../../trader/uniswap/useComputedApprove'
 import { useSwapCallback } from '../../trader/uniswap/useSwapCallback'
 import { useSwapState, SwapActionType } from '../../trader/uniswap/useSwapState'
-import { TradeStrategy, TokenPanelType, TradeProvider } from '../../types'
+import { TradeStrategy, TokenPanelType } from '../../types'
 import { CONSTANTS } from '../../../../web3/constants'
 import { TRADE_CONSTANTS } from '../../constants'
 import { sleep } from '../../../../utils/utils'
-import { EthereumStatusBar } from '../../../../web3/UI/EthereumStatusBar'
 import { TransactionStateType } from '../../../../web3/hooks/useTransactionState'
 import { SelectERC20TokenDialog } from '../../../../web3/UI/SelectERC20TokenDialog'
 import { useRemoteControlledDialog } from '../../../../utils/hooks/useRemoteControlledDialog'
@@ -33,13 +31,6 @@ const useStyles = makeStyles((theme: Theme) => {
             flexDirection: 'column',
             minHeight: 266,
             position: 'relative',
-        },
-        bar: {
-            display: 'flex',
-            justifyContent: 'space-between',
-            width: 350,
-            margin: '0 auto',
-            marginTop: theme.spacing(1),
         },
         progress: {
             bottom: theme.spacing(1),
@@ -56,7 +47,6 @@ export interface TraderProps extends withClasses<KeysInferFromUseStyles<typeof u
     address: string
     name: string
     symbol: string
-    tradeProvider: TradeProvider
 }
 
 export function Trader(props: TraderProps) {
@@ -246,12 +236,6 @@ export function Trader(props: TraderProps) {
 
     return (
         <div className={classes.root}>
-            <div className={classes.bar}>
-                <EthereumStatusBar />
-                <IconButton color="primary">
-                    <Settings size={18} />
-                </IconButton>
-            </div>
             <TradeForm
                 approveState={approveState}
                 strategy={strategy}

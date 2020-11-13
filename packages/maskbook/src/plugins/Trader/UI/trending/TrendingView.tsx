@@ -21,8 +21,8 @@ import { DataProvider, TradeProvider } from '../../types'
 import {
     resolveDataProviderName,
     resolveDataProviderLink,
-    resolvetradeProviderName,
-    resolvetradeProviderLink,
+    resolveTradeProviderName,
+    resolveTradeProviderLink,
 } from '../../pipes'
 import { getActivatedUI } from '../../../../social-network/ui'
 import { formatCurrency } from '../../../Wallet/formatter'
@@ -40,11 +40,11 @@ import { useCurrentTradeProvider } from '../../trending/useCurrentTradeProvider'
 import { useCurrentCurrency } from '../../trending/useCurrentCurrency'
 import { useI18N } from '../../../../utils/i18n-next-ui'
 import { CoinMarketCapIcon } from '../../../../resources/CoinMarketCapIcon'
-import { Trader } from '../trader/Trader'
 import { useConstant } from '../../../../web3/hooks/useConstant'
 import { UniswapIcon } from '../../../../resources/UniswapIcon'
 import { MaskbookTextIcon } from '../../../../resources/MaskbookIcon'
 import { CONSTANTS } from '../../../../web3/constants'
+import { TradeView } from '../trader/TradeView'
 
 const useStyles = makeStyles((theme: Theme) => {
     const internalName = getActivatedUI()?.internalName
@@ -351,11 +351,12 @@ export function TrendingView(props: TrendingViewProps) {
                     ) : null}
                     {tabIndex === 1 ? <TickersTable tickers={tickers} platform={dataProvider} /> : null}
                     {tabIndex === 2 && canSwap ? (
-                        <Trader
-                            address={coin.eth_address ?? ETH_ADDRESS}
-                            name={coin.name}
-                            symbol={coin.symbol}
-                            tradeProvider={TradeProvider.UNISWAP}
+                        <TradeView
+                            TraderProps={{
+                                address: coin.eth_address ?? ETH_ADDRESS,
+                                name: coin.name,
+                                symbol: coin.symbol,
+                            }}
                         />
                     ) : null}
                 </Paper>
@@ -406,12 +407,12 @@ export function TrendingView(props: TrendingViewProps) {
                             color="textSecondary"
                             target="_blank"
                             rel="noopener noreferrer"
-                            title={resolvetradeProviderName(TradeProvider.UNISWAP)}
-                            href={resolvetradeProviderLink(TradeProvider.UNISWAP)}>
+                            title={resolveTradeProviderName(TradeProvider.UNISWAP)}
+                            href={resolveTradeProviderLink(TradeProvider.UNISWAP)}>
                             {tradeProvider === TradeProvider.UNISWAP ? (
                                 <UniswapIcon classes={{ root: classes.uniswap }} viewBox="0 0 16 16" />
                             ) : (
-                                resolvetradeProviderName(tradeProvider)
+                                resolveTradeProviderName(tradeProvider)
                             )}
                         </Link>
                         {' V2'}

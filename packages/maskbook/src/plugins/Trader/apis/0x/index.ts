@@ -1,1 +1,1 @@
-export const c = 'c'
+export const ZRX = 'ZRX'

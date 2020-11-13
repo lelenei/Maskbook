@@ -21,8 +21,7 @@ import { useChainIdValid } from '../../../../web3/hooks/useChainState'
 const useStyles = makeStyles((theme: Theme) => {
     return createStyles({
         form: {
-            width: 350,
-            margin: `${theme.spacing(2)}px auto`,
+            marginTop: theme.spacing(2),
         },
         section: {
             textAlign: 'center',
