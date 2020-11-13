@@ -1,8 +1,8 @@
 import { useComputedTrade } from './useComputedTrade'
 import { useMemo } from 'react'
 import type { Trade, Token as UniswapToken } from '@uniswap/sdk'
-import { useChainId } from '../../../web3/hooks/useChainState'
-import { createEetherToken, createERC20Token } from '../../../web3/helpers'
+import { useChainId } from '../../../../web3/hooks/useChainState'
+import { createEetherToken, createERC20Token } from '../../../../web3/helpers'
 
 export function useComputedApprove(trade: Trade | null) {
     const chainId = useChainId()

@@ -1,5 +1,5 @@
 import { Trade, TradeType, Percent, JSBI, Fraction, TokenAmount, CurrencyAmount } from '@uniswap/sdk'
-import { toUniswapPercent } from '../helpers'
+import { toUniswapPercent } from '../../helpers'
 import { useSlippageTolerance } from './useSlippageTolerance'
 import { useMemo } from 'react'
 

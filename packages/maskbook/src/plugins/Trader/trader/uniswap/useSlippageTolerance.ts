@@ -1,4 +1,4 @@
-import { DEFAULT_SLIPPAGE_TOLERANCE } from '../constants'
+import { DEFAULT_SLIPPAGE_TOLERANCE } from '../../constants'
 
 /**
  * Maybe we should support settings panel in unswap trader

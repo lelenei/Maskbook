@@ -1,4 +1,4 @@
-import { DEFAULT_TRANSACTION_DEADLINE } from '../constants'
+import { DEFAULT_TRANSACTION_DEADLINE } from '../../constants'
 
 /**
  * Maybe we should support settings panel in unswap trader

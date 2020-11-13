@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Trade, Router, Percent, JSBI, TradeType } from '@uniswap/sdk'
-import { DEFAULT_SLIPPAGE_TOLERANCE, DEFAULT_TRANSACTION_DEADLINE, BIPS_BASE } from '../constants'
-import { useAccount } from '../../../web3/hooks/useAccount'
+import { DEFAULT_SLIPPAGE_TOLERANCE, DEFAULT_TRANSACTION_DEADLINE, BIPS_BASE } from '../../constants'
+import { useAccount } from '../../../../web3/hooks/useAccount'
 
 /**
  * Returns the swap calls that can be used to make the trade

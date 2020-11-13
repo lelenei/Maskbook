@@ -5,16 +5,16 @@ import { useStylesExtends } from '../../../../components/custom-ui-helper'
 import { useToken } from '../../../../web3/hooks/useToken'
 import { Token, EthereumTokenType } from '../../../../web3/types'
 import { useConstant } from '../../../../web3/hooks/useConstant'
-import { useTrade } from '../../uniswap/useTrade'
-import { TradeForm } from './TradeForm'
-import { TradeRoute } from './TradeRoute'
-import { TradeSummary } from './TradeSummary'
-import { ConfirmDialog } from './ConfirmDialog'
+import { useTrade } from '../../trader/uniswap/useTrade'
+import { TradeForm } from './uniswap/TradeForm'
+import { TradeRoute } from './uniswap/TradeRoute'
+import { TradeSummary } from './uniswap/TradeSummary'
+import { ConfirmDialog } from './uniswap/ConfirmDialog'
 import { useERC20TokenApproveCallback, ApproveState } from '../../../../web3/hooks/useERC20TokenApproveCallback'
-import { useComputedApprove } from '../../uniswap/useComputedApprove'
-import { useSwapCallback } from '../../uniswap/useSwapCallback'
-import { useSwapState, SwapActionType } from '../../uniswap/useSwapState'
-import { TradeStrategy, TokenPanelType } from '../../types'
+import { useComputedApprove } from '../../trader/uniswap/useComputedApprove'
+import { useSwapCallback } from '../../trader/uniswap/useSwapCallback'
+import { useSwapState, SwapActionType } from '../../trader/uniswap/useSwapState'
+import { TradeStrategy, TokenPanelType, SwapProvider } from '../../types'
 import { CONSTANTS } from '../../../../web3/constants'
 import { TRADE_CONSTANTS } from '../../constants'
 import { sleep } from '../../../../utils/utils'
@@ -52,6 +52,7 @@ export interface TraderProps extends withClasses<KeysInferFromUseStyles<typeof u
     address: string
     name: string
     symbol: string
+    swapProvider: SwapProvider
 }
 
 export function Trader(props: TraderProps) {

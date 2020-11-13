@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 import { Trade, Pair } from '@uniswap/sdk'
 import BigNumber from 'bignumber.js'
-import { toUniswapCurrencyAmount, toUniswapCurrency } from '../helpers'
-import { useChainId } from '../../../web3/hooks/useChainState'
-import { TradeStrategy } from '../types'
-import type { Token } from '../../../web3/types'
+import { toUniswapCurrencyAmount, toUniswapCurrency } from '../../helpers'
+import { useChainId } from '../../../../web3/hooks/useChainState'
+import { TradeStrategy } from '../../types'
+import type { Token } from '../../../../web3/types'
 import { useAllCommonPairs } from './useAllCommonPairs'
 
 export function useTrade(

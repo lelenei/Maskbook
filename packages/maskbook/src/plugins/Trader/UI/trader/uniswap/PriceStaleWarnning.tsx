@@ -1,7 +1,7 @@
 import React from 'react'
 import { Paper, Box, Typography, Button, makeStyles, createStyles, Theme } from '@material-ui/core'
 import WarningIcon from '@material-ui/icons/Warning'
-import { useStylesExtends } from '../../../../components/custom-ui-helper'
+import { useStylesExtends } from '../../../../../components/custom-ui-helper'
 
 const useStyles = makeStyles((theme: Theme) => {
     return createStyles({

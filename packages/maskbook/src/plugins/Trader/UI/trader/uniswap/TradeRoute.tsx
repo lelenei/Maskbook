@@ -2,9 +2,9 @@ import React from 'react'
 import type { Trade } from '@uniswap/sdk'
 import { Box, Breadcrumbs, Typography, makeStyles, createStyles, Theme, Paper } from '@material-ui/core'
 import NavigateNextIcon from '@material-ui/icons/NavigateNext'
-import { TokenIcon } from '../../../../extension/options-page/DashboardComponents/TokenIcon'
-import { useStylesExtends } from '../../../../components/custom-ui-helper'
-import type { TradeStrategy } from '../../types'
+import { TokenIcon } from '../../../../../extension/options-page/DashboardComponents/TokenIcon'
+import { useStylesExtends } from '../../../../../components/custom-ui-helper'
+import type { TradeStrategy } from '../../../types'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

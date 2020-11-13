@@ -40,7 +40,7 @@ import { useCurrentSwapProvider } from '../../trending/useCurrentSwapProvider'
 import { useCurrentCurrency } from '../../trending/useCurrentCurrency'
 import { useI18N } from '../../../../utils/i18n-next-ui'
 import { CoinMarketCapIcon } from '../../../../resources/CoinMarketCapIcon'
-import { Trader } from '../uniswap/Trader'
+import { Trader } from '../trader/Trader'
 import { useConstant } from '../../../../web3/hooks/useConstant'
 import { UniswapIcon } from '../../../../resources/UniswapIcon'
 import { MaskbookTextIcon } from '../../../../resources/MaskbookIcon'
@@ -351,7 +351,12 @@ export function TrendingView(props: TrendingViewProps) {
                     ) : null}
                     {tabIndex === 1 ? <TickersTable tickers={tickers} platform={dataProvider} /> : null}
                     {tabIndex === 2 && canSwap ? (
-                        <Trader address={coin.eth_address ?? ETH_ADDRESS} name={coin.name} symbol={coin.symbol} />
+                        <Trader
+                            address={coin.eth_address ?? ETH_ADDRESS}
+                            name={coin.name}
+                            symbol={coin.symbol}
+                            swapProvider={SwapProvider.UNISWAP}
+                        />
                     ) : null}
                 </Paper>
             </CardContent>

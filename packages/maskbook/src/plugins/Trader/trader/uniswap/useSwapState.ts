@@ -1,6 +1,6 @@
 import { useReducer } from 'react'
-import type { Token } from '../../../web3/types'
-import { TradeStrategy } from '../types'
+import type { Token } from '../../../../web3/types'
+import { TradeStrategy } from '../../types'
 
 export interface SwapState {
     strategy: TradeStrategy

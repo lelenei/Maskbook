@@ -136,7 +136,6 @@ export const BASE_AGAINST_TOKENS: {
 
 export const BIPS_BASE = JSBI.BigInt(10000)
 export const ONE_BIPS = new Percent(JSBI.BigInt(1), BIPS_BASE)
-export const DEFAULT_SLIPPAGE_TOLERANCE = 50 // bips
 export const DEFAULT_TRANSACTION_DEADLINE = 20 /* minutes */ * 60 /* seconds */ // seconds
 
 export const ALLOWED_PRICE_IMPACT_LOW: Percent = new Percent(JSBI.BigInt(100), BIPS_BASE) // 1%

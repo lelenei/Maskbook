@@ -1,9 +1,9 @@
-import { useChainId } from '../../../web3/hooks/useChainState'
-import { BASE_AGAINST_TOKENS, CUSTOM_BASES } from '../constants'
-import type { Token } from '../../../web3/types'
+import { useChainId } from '../../../../web3/hooks/useChainState'
+import { BASE_AGAINST_TOKENS, CUSTOM_BASES } from '../../constants'
+import type { Token } from '../../../../web3/types'
 import { useMemo } from 'react'
 import { flatMap } from 'lodash-es'
-import { toUniswapToken } from '../helpers'
+import { toUniswapToken } from '../../helpers'
 import { useUniswapPairs, TokenPair, PairState } from './usePairs'
 import type { Pair } from '@uniswap/sdk'
 

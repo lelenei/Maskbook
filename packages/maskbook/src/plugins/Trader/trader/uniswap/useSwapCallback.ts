@@ -1,11 +1,11 @@
 import type { Trade, SwapParameters } from '@uniswap/sdk'
 import { useCallback, useState } from 'react'
-import { DEFAULT_SLIPPAGE_TOLERANCE, DEFAULT_TRANSACTION_DEADLINE } from '../constants'
+import { DEFAULT_SLIPPAGE_TOLERANCE, DEFAULT_TRANSACTION_DEADLINE } from '../../constants'
 import { useSwapParameters } from './useSwapParameters'
-import { useRouterV2Contract } from '../contracts/useRouterV2Contract'
-import { addGasMargin } from '../../../web3/helpers'
+import { addGasMargin } from '../../../../web3/helpers'
 import BigNumber from 'bignumber.js'
-import { TransactionState, TransactionStateType } from '../../../web3/hooks/useTransactionState'
+import { TransactionState, TransactionStateType } from '../../../../web3/hooks/useTransactionState'
+import { useRouterV2Contract } from '../../contracts/uniswap/useRouterV2Contract'
 
 interface SuccessfulCall {
     parameters: SwapParameters
