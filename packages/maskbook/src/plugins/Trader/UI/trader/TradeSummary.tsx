@@ -13,11 +13,11 @@ import {
 } from '@material-ui/core'
 import type { Trade } from '@uniswap/sdk'
 import LoopIcon from '@material-ui/icons/Loop'
-import { useComputedTrade } from '../../../trader/uniswap/useComputedTrade'
-import type { Token } from '../../../../../web3/types'
-import { ONE_BIPS } from '../../../constants'
-import { useStylesExtends } from '../../../../../components/custom-ui-helper'
-import { TradeStrategy } from '../../../types'
+import { useComputedTrade } from '../../trader/uniswap/useComputedTrade'
+import type { Token } from '../../../../web3/types'
+import { ONE_BIPS } from '../../constants'
+import { useStylesExtends } from '../../../../components/custom-ui-helper'
+import { TradeStrategy } from '../../types'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

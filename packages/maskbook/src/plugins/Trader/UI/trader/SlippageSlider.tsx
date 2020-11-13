@@ -1,6 +1,6 @@
 import React from 'react'
 import { Slider } from '@material-ui/core'
-import { DEFAULT_SLIPPAGE_TOLERANCE, MIN_SLIPPAGE_TOLERANCE, MAX_SLIPPAGE_TOLERANCE } from '../../../constants'
+import { DEFAULT_SLIPPAGE_TOLERANCE, MIN_SLIPPAGE_TOLERANCE, MAX_SLIPPAGE_TOLERANCE } from '../../constants'
 
 export interface SlippageSliderProps {
     value?: number

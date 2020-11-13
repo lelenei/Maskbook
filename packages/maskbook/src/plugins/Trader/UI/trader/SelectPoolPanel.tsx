@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react'
 import { difference } from 'lodash-es'
 import { makeStyles, createStyles, Checkbox, FormControlLabel } from '@material-ui/core'
-import { SwapSource } from '../../../types'
-import { getEnumAsArray } from '../../../../../utils/enum'
-import { resolveSwapSourceName } from '../../../pipes'
+import { TradePool } from '../../types'
+import { getEnumAsArray } from '../../../../utils/enum'
+import { resolveSwapSourceName } from '../../pipes'
 
 const useStyles = makeStyles((theme) => {
     return createStyles({
@@ -17,18 +17,18 @@ const useStyles = makeStyles((theme) => {
     })
 })
 
-export interface SelectSourcePanelProps {
-    selected: SwapSource[]
-    onChange: (value: SwapSource[]) => void
+export interface SelectPoolPanelProps {
+    selected: TradePool[]
+    onChange: (value: TradePool[]) => void
 }
 
-export function SelectSourcePanel(props: SelectSourcePanelProps) {
+export function SelectPoolPanel(props: SelectPoolPanelProps) {
     const { selected } = props
     const classes = useStyles()
 
     const onChange = useCallback(
         (ev: React.ChangeEvent<HTMLInputElement>) => {
-            const source = Number.parseInt(ev.target.value, 10) as SwapSource
+            const source = Number.parseInt(ev.target.value, 10) as TradePool
             props.onChange(selected.includes(source) ? difference(selected, [source]) : selected.concat(source))
         },
         [selected, props.onChange],
@@ -36,7 +36,7 @@ export function SelectSourcePanel(props: SelectSourcePanelProps) {
 
     return (
         <div className={classes.root}>
-            {getEnumAsArray(SwapSource).map((source) => (
+            {getEnumAsArray(TradePool).map((source) => (
                 <FormControlLabel
                     className={classes.name}
                     label={resolveSwapSourceName(source.value)}

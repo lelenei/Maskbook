@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from 'react'
 import { TrendingPopper } from './trending/TrendingPopper'
-import { DataProvider, SwapProvider } from '../types'
+import { DataProvider, TradeProvider } from '../types'
 import { TrendingView } from './trending/TrendingView'
 import { PluginTraderRPC } from '../messages'
 
@@ -16,7 +16,7 @@ export function PageInspector(props: PageInspectorProps) {
             <TrendingView
                 name={name}
                 dataProviders={dataProviders}
-                swapProviders={[SwapProvider.UNISWAP]}
+                tradeProviders={[TradeProvider.UNISWAP]}
                 onUpdate={reposition}
             />
         )

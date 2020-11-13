@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { makeStyles, createStyles, Accordion, AccordionSummary, Typography, AccordionDetails } from '@material-ui/core'
-import type { SwapSource } from '../../../types'
-import { SelectSourcePanel } from './SelectSourcePanel'
+import type { TradePool } from '../../types'
+import { SelectPoolPanel } from './SelectPoolPanel'
 import { SlippageSlider } from './SlippageSlider'
 
 const useStyles = makeStyles((theme) => {
@@ -16,7 +16,7 @@ export interface SettingsPanelProps {}
 
 export function SettingsPanel(props: SettingsPanelProps) {
     const classes = useStyles()
-    const [listOfSource, setListOfSource] = useState<SwapSource[]>([])
+    const [listOfSource, setListOfSource] = useState<TradePool[]>([])
 
     return (
         <div className={classes.root}>
@@ -33,7 +33,7 @@ export function SettingsPanel(props: SettingsPanelProps) {
                     <Typography className={classes.heading}>Exchanges</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <SelectSourcePanel selected={listOfSource} onChange={setListOfSource} />
+                    <SelectPoolPanel selected={listOfSource} onChange={setListOfSource} />
                 </AccordionDetails>
             </Accordion>
         </div>

@@ -1,14 +1,14 @@
 import { createInternalSettings, createGlobalSettings } from '../../settings/createSettings'
-import { DataProvider, SwapProvider } from './types'
+import { DataProvider, TradeProvider } from './types'
 import { PLUGIN_IDENTIFIER } from './constants'
 import { i18n } from '../../utils/i18n-next'
 
 /**
  * The swap provider for trading
  */
-export const currentSwapProviderSettings = createGlobalSettings<SwapProvider>(
-    `${PLUGIN_IDENTIFIER}+swapProvider`,
-    SwapProvider.UNISWAP,
+export const currenttradeProviderSettings = createGlobalSettings<TradeProvider>(
+    `${PLUGIN_IDENTIFIER}+tradeProvider`,
+    TradeProvider.UNISWAP,
     {
         primary: () => '',
     },

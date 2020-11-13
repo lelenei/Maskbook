@@ -1,4 +1,4 @@
-export enum SwapProvider {
+export enum TradeProvider {
     UNISWAP,
     ZRX, // 0x
     // ONE_INCH,
@@ -7,7 +7,7 @@ export enum SwapProvider {
 
 // ZRX supported source swap list
 // Learn more https://github.com/0xProject/0x-monorepo/blob/development/packages/asset-swapper/src/utils/market_operation_utils/types.ts#L27
-export enum SwapSource {
+export enum TradePool {
     ZRX,
     Uniswap,
     UniswapV2,
@@ -27,4 +27,14 @@ export enum SwapSource {
     SnowSwap,
     SushiSwap,
     Dodo,
+}
+
+export enum TradeStrategy {
+    ExactIn,
+    ExactOut,
+}
+
+export enum TokenPanelType {
+    Input,
+    Output,
 }

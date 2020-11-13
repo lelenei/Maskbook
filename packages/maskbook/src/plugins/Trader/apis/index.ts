@@ -6,6 +6,8 @@ import { getEnumAsArray } from '../../../utils/enum'
 import { BTC_FIRST_LEGER_DATE, CRYPTOCURRENCY_MAP_EXPIRES_AT } from '../constants'
 import { resolveCoinId, resolveCoinAddress } from './hotfix'
 
+export * from './0x'
+
 export async function getCurrenies(dataProvider: DataProvider): Promise<Currency[]> {
     if (dataProvider === DataProvider.COIN_GECKO) {
         const currencies = await coinGeckoAPI.getAllCurrenies()

@@ -1,20 +1,21 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react'
-import { makeStyles, Theme, createStyles, CircularProgress } from '@material-ui/core'
+import { makeStyles, Theme, createStyles, CircularProgress, IconButton } from '@material-ui/core'
 import BigNumber from 'bignumber.js'
+import { Settings } from 'react-feather'
 import { useStylesExtends } from '../../../../components/custom-ui-helper'
 import { useToken } from '../../../../web3/hooks/useToken'
 import { Token, EthereumTokenType } from '../../../../web3/types'
 import { useConstant } from '../../../../web3/hooks/useConstant'
 import { useTrade } from '../../trader/uniswap/useTrade'
-import { TradeForm } from './uniswap/TradeForm'
-import { TradeRoute } from './uniswap/TradeRoute'
-import { TradeSummary } from './uniswap/TradeSummary'
-import { ConfirmDialog } from './uniswap/ConfirmDialog'
+import { TradeForm } from './TradeForm'
+import { TradeRoute } from './TradeRoute'
+import { TradeSummary } from './TradeSummary'
+import { ConfirmDialog } from './ConfirmDialog'
 import { useERC20TokenApproveCallback, ApproveState } from '../../../../web3/hooks/useERC20TokenApproveCallback'
 import { useComputedApprove } from '../../trader/uniswap/useComputedApprove'
 import { useSwapCallback } from '../../trader/uniswap/useSwapCallback'
 import { useSwapState, SwapActionType } from '../../trader/uniswap/useSwapState'
-import { TradeStrategy, TokenPanelType, SwapProvider } from '../../types'
+import { TradeStrategy, TokenPanelType, TradeProvider } from '../../types'
 import { CONSTANTS } from '../../../../web3/constants'
 import { TRADE_CONSTANTS } from '../../constants'
 import { sleep } from '../../../../utils/utils'
@@ -34,8 +35,11 @@ const useStyles = makeStyles((theme: Theme) => {
             position: 'relative',
         },
         bar: {
+            display: 'flex',
+            justifyContent: 'space-between',
             width: 350,
-            margin: `${theme.spacing(2)}px auto 0`,
+            margin: '0 auto',
+            marginTop: theme.spacing(1),
         },
         progress: {
             bottom: theme.spacing(1),
@@ -52,7 +56,7 @@ export interface TraderProps extends withClasses<KeysInferFromUseStyles<typeof u
     address: string
     name: string
     symbol: string
-    swapProvider: SwapProvider
+    tradeProvider: TradeProvider
 }
 
 export function Trader(props: TraderProps) {
@@ -242,7 +246,12 @@ export function Trader(props: TraderProps) {
 
     return (
         <div className={classes.root}>
-            <EthereumStatusBar classes={{ root: classes.bar }} />
+            <div className={classes.bar}>
+                <EthereumStatusBar />
+                <IconButton color="primary">
+                    <Settings size={18} />
+                </IconButton>
+            </div>
             <TradeForm
                 approveState={approveState}
                 strategy={strategy}

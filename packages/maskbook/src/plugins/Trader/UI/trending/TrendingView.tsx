@@ -17,12 +17,12 @@ import {
 } from '@material-ui/core'
 import { last } from 'lodash-es'
 import { AlertCircle } from 'react-feather'
-import { DataProvider, SwapProvider } from '../../types'
+import { DataProvider, TradeProvider } from '../../types'
 import {
     resolveDataProviderName,
     resolveDataProviderLink,
-    resolveSwapProviderName,
-    resolveSwapProviderLink,
+    resolvetradeProviderName,
+    resolvetradeProviderLink,
 } from '../../pipes'
 import { getActivatedUI } from '../../../../social-network/ui'
 import { formatCurrency } from '../../../Wallet/formatter'
@@ -36,7 +36,7 @@ import { usePriceStats } from '../../trending/usePriceStats'
 import { Skeleton } from '@material-ui/lab'
 import { Days, PriceChartDaysControl } from './PriceChartDaysControl'
 import { useCurrentDataProvider } from '../../trending/useCurrentDataProvider'
-import { useCurrentSwapProvider } from '../../trending/useCurrentSwapProvider'
+import { useCurrentTradeProvider } from '../../trending/useCurrentTradeProvider'
 import { useCurrentCurrency } from '../../trending/useCurrentCurrency'
 import { useI18N } from '../../../../utils/i18n-next-ui'
 import { CoinMarketCapIcon } from '../../../../resources/CoinMarketCapIcon'
@@ -204,7 +204,7 @@ function TrendingViewError(props: TrendingViewErrorProps) {
 export interface TrendingViewProps extends withClasses<KeysInferFromUseStyles<typeof useStyles>> {
     name: string
     dataProviders: DataProvider[]
-    swapProviders: SwapProvider[]
+    tradeProviders: TradeProvider[]
     onUpdate?: () => void
 }
 
@@ -222,7 +222,7 @@ export function TrendingView(props: TrendingViewProps) {
     //#endregion
 
     //#region swap
-    const swapProvider = useCurrentSwapProvider(props.swapProviders)
+    const tradeProvider = useCurrentTradeProvider(props.tradeProviders)
     //#endregion
 
     //#region stats
@@ -355,7 +355,7 @@ export function TrendingView(props: TrendingViewProps) {
                             address={coin.eth_address ?? ETH_ADDRESS}
                             name={coin.name}
                             symbol={coin.symbol}
-                            swapProvider={SwapProvider.UNISWAP}
+                            tradeProvider={TradeProvider.UNISWAP}
                         />
                     ) : null}
                 </Paper>
@@ -406,12 +406,12 @@ export function TrendingView(props: TrendingViewProps) {
                             color="textSecondary"
                             target="_blank"
                             rel="noopener noreferrer"
-                            title={resolveSwapProviderName(SwapProvider.UNISWAP)}
-                            href={resolveSwapProviderLink(SwapProvider.UNISWAP)}>
-                            {swapProvider === SwapProvider.UNISWAP ? (
+                            title={resolvetradeProviderName(TradeProvider.UNISWAP)}
+                            href={resolvetradeProviderLink(TradeProvider.UNISWAP)}>
+                            {tradeProvider === TradeProvider.UNISWAP ? (
                                 <UniswapIcon classes={{ root: classes.uniswap }} viewBox="0 0 16 16" />
                             ) : (
-                                resolveSwapProviderName(swapProvider)
+                                resolvetradeProviderName(tradeProvider)
                             )}
                         </Link>
                         {' V2'}

@@ -1,4 +1,4 @@
-import { Currency, DataProvider, SwapProvider, SwapSource } from './types'
+import { Currency, DataProvider, TradeProvider, TradePool } from './types'
 import { unreachable } from '../../utils/utils'
 
 export function resolveCurrencyName(currency: Currency) {
@@ -31,25 +31,25 @@ export function resolveDataProviderLink(dataProvider: DataProvider) {
     }
 }
 
-export function resolveSwapProviderName(swapProvider: SwapProvider) {
-    switch (swapProvider) {
-        case SwapProvider.UNISWAP:
+export function resolvetradeProviderName(tradeProvider: TradeProvider) {
+    switch (tradeProvider) {
+        case TradeProvider.UNISWAP:
             return 'Uniswap'
-        case SwapProvider.ZRX:
+        case TradeProvider.ZRX:
             return '0x'
         default:
-            unreachable(swapProvider)
+            unreachable(tradeProvider)
     }
 }
 
-export function resolveSwapProviderLink(swapProvider: SwapProvider) {
-    switch (swapProvider) {
-        case SwapProvider.UNISWAP:
+export function resolvetradeProviderLink(tradeProvider: TradeProvider) {
+    switch (tradeProvider) {
+        case TradeProvider.UNISWAP:
             return 'https://uniswap.org/'
-        case SwapProvider.ZRX:
+        case TradeProvider.ZRX:
             return 'https://0x.org/'
         default:
-            unreachable(swapProvider)
+            unreachable(tradeProvider)
     }
 }
 
@@ -61,27 +61,27 @@ export function resolveDaysName(days: number) {
     return `${days}d`
 }
 
-export function resolveSwapSourceName(swapSource: SwapSource) {
-    const SWAP_SOURCE_NAME_MAP: EnumRecord<SwapSource, string> = {
-        [SwapSource.ZRX]: 'ZRX',
-        [SwapSource.Uniswap]: 'Uniswap',
-        [SwapSource.UniswapV2]: 'Uniswap_V2',
-        [SwapSource.Eth2Dai]: 'Eth2Dai',
-        [SwapSource.Kyber]: 'Kyber',
-        [SwapSource.Curve]: 'Curve',
-        [SwapSource.LiquidityProvider]: 'LiquidityProvider',
-        [SwapSource.MultiBridge]: 'MultiBridge',
-        [SwapSource.Balancer]: 'Balancer',
-        [SwapSource.Cream]: 'CREAM',
-        [SwapSource.Bancor]: 'Bancor',
-        [SwapSource.MStable]: 'mStable',
-        [SwapSource.Mooniswap]: 'Mooniswap',
-        [SwapSource.MultiHop]: 'MultiHop',
-        [SwapSource.Shell]: 'Shell',
-        [SwapSource.Swerve]: 'Swerve',
-        [SwapSource.SnowSwap]: 'SnowSwap',
-        [SwapSource.SushiSwap]: 'SushiSwap',
-        [SwapSource.Dodo]: 'DODO',
+export function resolveSwapSourceName(swapSource: TradePool) {
+    const SWAP_SOURCE_NAME_MAP: EnumRecord<TradePool, string> = {
+        [TradePool.ZRX]: 'ZRX',
+        [TradePool.Uniswap]: 'Uniswap',
+        [TradePool.UniswapV2]: 'Uniswap_V2',
+        [TradePool.Eth2Dai]: 'Eth2Dai',
+        [TradePool.Kyber]: 'Kyber',
+        [TradePool.Curve]: 'Curve',
+        [TradePool.LiquidityProvider]: 'LiquidityProvider',
+        [TradePool.MultiBridge]: 'MultiBridge',
+        [TradePool.Balancer]: 'Balancer',
+        [TradePool.Cream]: 'CREAM',
+        [TradePool.Bancor]: 'Bancor',
+        [TradePool.MStable]: 'mStable',
+        [TradePool.Mooniswap]: 'Mooniswap',
+        [TradePool.MultiHop]: 'MultiHop',
+        [TradePool.Shell]: 'Shell',
+        [TradePool.Swerve]: 'Swerve',
+        [TradePool.SnowSwap]: 'SnowSwap',
+        [TradePool.SushiSwap]: 'SushiSwap',
+        [TradePool.Dodo]: 'DODO',
     }
     return SWAP_SOURCE_NAME_MAP[swapSource]
 }
