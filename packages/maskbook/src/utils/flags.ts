@@ -33,6 +33,8 @@ export const Flags = {
     wallet_network_strict_mode_enabled: process.env.NODE_ENV === 'production' && !betaOrInsiderOnly,
     transak_enabled: false,
     trader_enabled: webOnly,
+    trader_zrx_enabled: false,
+    trader_one_inche_enable: false,
     trader_all_api_cached_enabled: devOnly,
     poll_enabled: webOnly,
     election2020_enabled: webOnly,
