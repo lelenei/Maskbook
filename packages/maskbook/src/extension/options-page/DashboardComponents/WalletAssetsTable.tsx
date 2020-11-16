@@ -16,10 +16,10 @@ import classNames from 'classnames'
 import { useStylesExtends } from '../../../components/custom-ui-helper'
 import { formatBalance, formatCurrency } from '../../../plugins/Wallet/formatter'
 import { useI18N } from '../../../utils/i18n-next-ui'
-import { CurrencyType, TokenDetailed } from '../../../web3/types'
+import { CurrencyType, AssetDetailed, EthereumTokenType } from '../../../web3/types'
 import { TokenIcon } from './TokenIcon'
 import type { WalletRecord } from '../../../plugins/Wallet/database/types'
-import { TokenActionsBar } from './TokenActionsBar'
+import { ERC20TokenActionsBar } from './ERC20TokenActionsBar'
 import { useChainIdValid } from '../../../web3/hooks/useChainState'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface WalletAssetsTableProps extends withClasses<KeysInferFromUseStyles<typeof useStyles>> {
     wallet: WalletRecord
-    detailedTokens: TokenDetailed[]
+    detailedTokens: AssetDetailed[]
 }
 
 export function WalletAssetsTable(props: WalletAssetsTableProps) {
@@ -107,7 +107,11 @@ export function WalletAssetsTable(props: WalletAssetsTableProps) {
                                 </Box>,
                                 <Box display="flex" justifyContent="flex-end">
                                     <Typography className={classes.name} color="textPrimary" component="span">
-                                        {formatBalance(new BigNumber(x.balance), x.token.decimals)}
+                                        {formatBalance(
+                                            new BigNumber(x.balance),
+                                            x.token.decimals ?? 0,
+                                            x.token.decimals ?? 0,
+                                        )}
                                     </Typography>
                                     <Typography className={classes.symbol} color="textSecondary" component="span">
                                         {x.token.symbol}
@@ -120,14 +124,18 @@ export function WalletAssetsTable(props: WalletAssetsTableProps) {
                                             : formatCurrency(0, '$')}
                                     </Typography>
                                 </Box>,
-                                <Box display="flex" justifyContent="flex-end">
-                                    <TokenActionsBar wallet={wallet} token={x.token} />
-                                </Box>,
-                            ].map((y, i) => (
-                                <TableCell className={classes.cell} key={i}>
-                                    {y}
-                                </TableCell>
-                            ))}
+                                x.token.type === EthereumTokenType.ERC20 ? (
+                                    <Box display="flex" justifyContent="flex-end">
+                                        <ERC20TokenActionsBar wallet={wallet} token={x.token} />
+                                    </Box>
+                                ) : null,
+                            ]
+                                .filter(Boolean)
+                                .map((y, i) => (
+                                    <TableCell className={classes.cell} key={i}>
+                                        {y}
+                                    </TableCell>
+                                ))}
                         </TableRow>
                     ))}
                 </TableBody>

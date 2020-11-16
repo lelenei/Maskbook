@@ -3,10 +3,10 @@ import Fuse from 'fuse.js'
 import Services from '../../extension/service'
 import { useAsync } from 'react-use'
 import { EthereumAddress } from 'wallet.ts'
-import { isSameAddress, createEetherToken } from '../helpers'
+import { isSameAddress } from '../helpers'
 import { useChainId } from './useChainState'
-import { EthereumTokenType, ChainId } from '../types'
-import { useToken } from './useToken'
+import { EthereumTokenType } from '../types'
+import { useERC20TokenDetailed } from './useERC20TokenDetailed'
 
 export enum TokenListsState {
     READY,
@@ -14,22 +14,13 @@ export enum TokenListsState {
     LOADING_SEARCHED_TOKEN,
 }
 
-export function useTokensFromLists(
-    lists: string[],
-    {
-        keyword = '',
-        useEther = false,
-        // TOOD:
-        // to be implemented
-        useAddressOnly = false,
-    }: { keyword?: string; chainId?: ChainId; useEther?: boolean; useAddressOnly?: boolean } = {},
-) {
+export function useERC20TokensDetailedFromTokenLists(lists: string[], keyword: string = '') {
     //#region fetch token lists
     const chainId = useChainId()
-    const { value: allTokens = [], loading: loadingAllTokens } = useAsync(async () => {
-        const tokens = lists.length === 0 ? [] : await Services.Ethereum.fetchTokensFromTokenLists(lists, chainId)
-        return useEther ? [createEetherToken(chainId), ...tokens] : tokens
-    }, [chainId, useEther, lists.sort().join()])
+    const { value: allTokens = [], loading: loadingAllTokens } = useAsync(
+        async () => (lists.length === 0 ? [] : Services.Ethereum.fetchERC20TokensFromTokenLists(lists, chainId)),
+        [chainId, lists.sort().join()],
+    )
     //#endregion
 
     //#region fuse
@@ -62,15 +53,13 @@ export function useTokensFromLists(
 
     //#region add token by address
     const matchedToken = useMemo(() => {
-        if (!keyword) return
-        if (!EthereumAddress.isValid(keyword)) return
-        if (searchedTokens.length) return
+        if (!keyword || !EthereumAddress.isValid(keyword) || searchedTokens.length) return
         return {
             type: EthereumTokenType.ERC20,
             address: keyword,
         }
     }, [keyword, searchedTokens.length])
-    const { value: searchedToken, loading: loadingSearchedToken } = useToken(matchedToken)
+    const { value: searchedToken, loading: loadingSearchedToken } = useERC20TokenDetailed(matchedToken?.address ?? '')
     //#endregion
 
     return {
@@ -79,6 +68,6 @@ export function useTokensFromLists(
             : loadingSearchedToken
             ? TokenListsState.LOADING_SEARCHED_TOKEN
             : TokenListsState.READY,
-        tokens: searchedTokens.length ? searchedTokens : searchedToken ? [searchedToken] : [],
+        tokensDetailed: searchedTokens.length ? searchedTokens : searchedToken ? [searchedToken] : [],
     }
 }

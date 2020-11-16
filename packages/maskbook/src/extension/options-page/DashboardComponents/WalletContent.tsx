@@ -8,7 +8,7 @@ import MoreVertOutlinedIcon from '@material-ui/icons/MoreVertOutlined'
 import HistoryIcon from '@material-ui/icons/History'
 import { useModal } from '../DashboardDialogs/Base'
 import {
-    DashboardWalletAddTokenDialog,
+    DashboardWalletAddERC20TokenDialog,
     DashboardWalletHistoryDialog,
     DashboardWalletBackupDialog,
     DashboardWalletDeleteConfirmDialog,
@@ -21,7 +21,7 @@ import { useI18N } from '../../../utils/i18n-next-ui'
 import { useColorStyles } from '../../../utils/theme'
 import { useMatchXS } from '../../../utils/hooks/useMatchXS'
 import type { WalletRecord } from '../../../plugins/Wallet/database/types'
-import type { TokenDetailed } from '../../../web3/types'
+import type { AssetDetailed } from '../../../web3/types'
 import { WalletAssetsTable } from './WalletAssetsTable'
 import { useRemoteControlledDialog } from '../../../utils/hooks/useRemoteControlledDialog'
 import { PluginTransakMessages } from '../../../plugins/Transak/messages'
@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) =>
 
 interface WalletContentProps {
     wallet: WalletRecord
-    detailedTokens: TokenDetailed[]
+    detailedTokens: AssetDetailed[]
 }
 
 export const WalletContent = React.forwardRef<HTMLDivElement, WalletContentProps>(function WalletContent(
@@ -83,7 +83,7 @@ export const WalletContent = React.forwardRef<HTMLDivElement, WalletContentProps
     const { t } = useI18N()
     const color = useColorStyles()
     const xsMatched = useMatchXS()
-    const [addToken, , openAddToken] = useModal(DashboardWalletAddTokenDialog)
+    const [addToken, , openAddToken] = useModal(DashboardWalletAddERC20TokenDialog)
     const [walletShare, , openWalletShare] = useModal(DashboardWalletShareDialog)
     const [walletHistory, , openWalletHistory] = useModal(DashboardWalletHistoryDialog)
     const [walletBackup, , openWalletBackup] = useModal(DashboardWalletBackupDialog)

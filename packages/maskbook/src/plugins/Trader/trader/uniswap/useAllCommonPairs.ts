@@ -1,18 +1,20 @@
-import { useChainId } from '../../../../web3/hooks/useChainState'
-import { BASE_AGAINST_TOKENS, CUSTOM_BASES } from '../../constants'
-import type { Token } from '../../../../web3/types'
 import { useMemo } from 'react'
 import { flatMap } from 'lodash-es'
+import type { Pair } from '@uniswap/sdk'
 import { toUniswapToken } from '../../helpers'
 import { useUniswapPairs, TokenPair, PairState } from './usePairs'
-import type { Pair } from '@uniswap/sdk'
+import { BASE_AGAINST_TOKENS, CUSTOM_BASES } from '../../constants'
+import { useChainId } from '../../../../web3/hooks/useChainState'
+import type { ERC20TokenDetailed, EtherTokenDetailed } from '../../../../web3/types'
+import { useUniswapToken } from './useUniswapToken'
 
-export function useAllCommonPairs(tokenA?: Token, tokenB?: Token) {
+export function useAllCommonPairs(
+    tokenA?: EtherTokenDetailed | ERC20TokenDetailed,
+    tokenB?: EtherTokenDetailed | ERC20TokenDetailed,
+) {
     const chainId = useChainId()
-    const [uniswapTokenA, uniswapTokenB] = [
-        tokenA ? toUniswapToken(chainId, tokenA) : undefined,
-        tokenB ? toUniswapToken(chainId, tokenB) : undefined,
-    ]
+    const uniswapTokenA = useUniswapToken(tokenA)
+    const uniswapTokenB = useUniswapToken(tokenB)
 
     const bases = useMemo(() => BASE_AGAINST_TOKENS[chainId].map((t) => toUniswapToken(t.chainId, t)), [
         BASE_AGAINST_TOKENS[chainId],

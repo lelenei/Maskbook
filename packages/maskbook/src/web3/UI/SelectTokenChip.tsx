@@ -4,7 +4,7 @@ import { makeStyles, Theme, createStyles, Chip, ChipProps, CircularProgress } fr
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { noop } from 'lodash-es'
 import { TokenIcon } from '../../extension/options-page/DashboardComponents/TokenIcon'
-import type { Token } from '../types'
+import type { ERC20TokenDetailed, EtherTokenDetailed } from '../types'
 
 const useStyles = makeStyles((theme: Theme) => {
     return createStyles({
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => {
 })
 
 export interface SelectTokenChipProps {
-    token?: Token | null
+    token?: EtherTokenDetailed | ERC20TokenDetailed | null
     loading?: boolean
     readonly?: boolean
     ChipProps?: Partial<ChipProps>
@@ -58,7 +58,7 @@ export function SelectTokenChip(props: SelectTokenChipProps) {
             variant="outlined"
             clickable={!readonly}
             label={token.symbol}
-            // delete icon visible when this callback provided
+            // the delete icon only visible when this callback provided
             onDelete={readonly ? undefined : noop}
             {...ChipProps}
         />

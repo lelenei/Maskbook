@@ -7,7 +7,6 @@ import type { Trade } from '@uniswap/sdk'
 import { useStylesExtends } from '../../../../components/custom-ui-helper'
 import ActionButton from '../../../../extension/options-page/DashboardComponents/ActionButton'
 import BigNumber from 'bignumber.js'
-import type { Token } from '../../../../web3/types'
 import { useAccount } from '../../../../web3/hooks/useAccount'
 import { useRemoteControlledDialog } from '../../../../utils/hooks/useRemoteControlledDialog'
 import { WalletMessages } from '../../../Wallet/messages'
@@ -17,6 +16,7 @@ import { TradeStrategy, TokenPanelType } from '../../types'
 import { TokenAmountPanel } from '../../../../web3/UI/TokenAmountPanel'
 import { useI18N } from '../../../../utils/i18n-next-ui'
 import { useChainIdValid } from '../../../../web3/hooks/useChainState'
+import { ERC20TokenDetailed, EthereumTokenType, EtherTokenDetailed } from '../../../../web3/types'
 
 const useStyles = makeStyles((theme: Theme) => {
     return createStyles({
@@ -57,8 +57,8 @@ export interface TradeFormProps extends withClasses<KeysInferFromUseStyles<typeo
     approveState: ApproveState
     strategy: TradeStrategy
     trade: Trade | null
-    inputToken?: Token
-    outputToken?: Token
+    inputToken?: EtherTokenDetailed | ERC20TokenDetailed
+    outputToken?: EtherTokenDetailed | ERC20TokenDetailed
     inputAmount: string
     outputAmount: string
     onInputAmountChange: (amount: string) => void
@@ -94,8 +94,14 @@ export function TradeForm(props: TradeFormProps) {
     //#endregion
 
     //#region loading balance
-    const { value: inputTokenBalance, loading: loadingInputToken } = useTokenBalance(inputToken)
-    const { value: outputTokenBalance, loading: loadingOutputToken } = useTokenBalance(outputToken)
+    const { value: inputTokenBalance, loading: loadingInputToken } = useTokenBalance(
+        inputToken?.type ?? EthereumTokenType.Ether,
+        inputToken?.address ?? '',
+    )
+    const { value: outputTokenBalance, loading: loadingOutputToken } = useTokenBalance(
+        outputToken?.type ?? EthereumTokenType.Ether,
+        outputToken?.address ?? '',
+    )
     const inputTokenTradeAmount = new BigNumber(inputAmount)
     const outputTokenTradeAmount = new BigNumber(outputAmount)
     const inputTokenBalanceAmount = new BigNumber(inputTokenBalance ?? '0')

@@ -14,10 +14,10 @@ import {
 import type { Trade } from '@uniswap/sdk'
 import LoopIcon from '@material-ui/icons/Loop'
 import { useComputedTrade } from '../../trader/uniswap/useComputedTrade'
-import type { Token } from '../../../../web3/types'
 import { ONE_BIPS } from '../../constants'
 import { useStylesExtends } from '../../../../components/custom-ui-helper'
 import { TradeStrategy } from '../../types'
+import type { ERC20TokenDetailed, EtherTokenDetailed } from '../../../../web3/types'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -52,8 +52,8 @@ const useStyles = makeStyles((theme: Theme) =>
 export interface TradeSummaryProps extends withClasses<KeysInferFromUseStyles<typeof useStyles>> {
     trade: Trade | null
     strategy: TradeStrategy
-    inputToken?: Token
-    outputToken?: Token
+    inputToken?: EtherTokenDetailed | ERC20TokenDetailed
+    outputToken?: EtherTokenDetailed | ERC20TokenDetailed
 }
 
 export function TradeSummary(props: TradeSummaryProps) {

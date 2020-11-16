@@ -3,7 +3,8 @@ import useSWR from 'swr'
 import { EthereumAddress } from 'wallet.ts'
 import { formatChecksumAddress } from '../../plugins/Wallet/formatter'
 import { createEetherToken } from '../helpers'
-import { ChainId, CurrencyType, EthereumTokenType, TokenDetailed } from '../types'
+import { ChainId, CurrencyType, EthereumTokenType, AssetDetailed } from '../types'
+import { useAccount } from './useAccount'
 import { useChainId } from './useChainState'
 
 namespace Debank {
@@ -43,9 +44,10 @@ async function fetcher(chainId: ChainId, address: string) {
  * Fetch tokens detailed info from debank API
  * @param address
  */
-export function useTokensDetailedDebank(address: string): TokenDetailed[] {
+export function useAssetsDetailedDebank(): AssetDetailed[] {
+    const account = useAccount()
     const chainId = useChainId()
-    const { data = [] } = useSWR([chainId, address], {
+    const { data = [] } = useSWR([account, chainId], {
         fetcher,
     })
     return data.map((x) => ({

@@ -2,8 +2,7 @@ import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { makeStyles, Theme, createStyles, CircularProgress } from '@material-ui/core'
 import BigNumber from 'bignumber.js'
 import { useStylesExtends } from '../../../../components/custom-ui-helper'
-import { useToken } from '../../../../web3/hooks/useToken'
-import { Token, EthereumTokenType } from '../../../../web3/types'
+import { ERC20TokenDetailed, EthereumTokenType, EtherTokenDetailed } from '../../../../web3/types'
 import { useConstant } from '../../../../web3/hooks/useConstant'
 import { useTrade } from '../../trader/uniswap/useTrade'
 import { TradeForm } from './TradeForm'
@@ -23,6 +22,7 @@ import { SelectERC20TokenDialog } from '../../../../web3/UI/SelectERC20TokenDial
 import { useRemoteControlledDialog } from '../../../../utils/hooks/useRemoteControlledDialog'
 import { WalletMessages } from '../../../Wallet/messages'
 import { useShareLink } from '../../../../utils/hooks/useShareLink'
+import { useTokenDetailed } from '../../../../web3/hooks/useTokenDetailed'
 
 const useStyles = makeStyles((theme: Theme) => {
     return createStyles({
@@ -65,25 +65,33 @@ export function Trader(props: TraderProps) {
     const isEtherInput = inputTokenAddress === ETH_ADDRESS
     const isEtherOutput = outputTokenAddress === ETH_ADDRESS
 
-    const asyncInputToken = useToken({
-        type: isEtherInput ? EthereumTokenType.Ether : EthereumTokenType.ERC20,
-        address: isEtherInput ? ETH_ADDRESS : inputTokenAddress,
-    })
-    const asyncOutputToken = useToken({
-        type: isEtherOutput ? EthereumTokenType.Ether : EthereumTokenType.ERC20,
-        address: isEtherOutput ? ETH_ADDRESS : outputTokenAddress,
-    })
+    const asyncInputTokenDetailed = useTokenDetailed(
+        isEtherInput ? EthereumTokenType.Ether : EthereumTokenType.ERC20,
+        isEtherInput ? ETH_ADDRESS : inputTokenAddress,
+        {
+            name,
+            symbol,
+        },
+    )
+    const asyncOutputTokenDetailed = useTokenDetailed(
+        isEtherOutput ? EthereumTokenType.Ether : EthereumTokenType.ERC20,
+        isEtherOutput ? ETH_ADDRESS : inputTokenAddress,
+        {
+            name,
+            symbol,
+        },
+    )
 
     useEffect(() => {
         dispatchSwapStore({
             type: SwapActionType.UPDATE_INPUT_TOKEN,
-            token: asyncInputToken.value,
+            token: asyncInputTokenDetailed.value,
         })
         dispatchSwapStore({
             type: SwapActionType.UPDATE_OUTPUT_TOKEN,
-            token: asyncOutputToken.value,
+            token: asyncOutputTokenDetailed.value,
         })
-    }, [asyncInputToken.value, asyncOutputToken.value])
+    }, [asyncInputTokenDetailed.value, asyncOutputTokenDetailed.value])
     //#endregion
 
     //#region switch tokens
@@ -146,7 +154,7 @@ export function Trader(props: TraderProps) {
         setOpenSelectERC20TokenDialog(false)
     }, [])
     const onSelectERC20TokenDialogSubmit = useCallback(
-        (token: Token) => {
+        (token: EtherTokenDetailed | ERC20TokenDetailed) => {
             dispatchSwapStore({
                 type:
                     focusedTokenPanelType === TokenPanelType.Input
@@ -163,7 +171,11 @@ export function Trader(props: TraderProps) {
     //#region approve
     const RouterV2Address = useConstant(TRADE_CONSTANTS, 'ROUTER_V2_ADDRESS')
     const { approveToken, approveAmount } = useComputedApprove(trade.v2Trade)
-    const [approveState, approveCallback] = useERC20TokenApproveCallback(approveToken, approveAmount, RouterV2Address)
+    const [approveState, approveCallback] = useERC20TokenApproveCallback(
+        approveToken?.address ?? '',
+        approveAmount,
+        RouterV2Address,
+    )
     const onApprove = useCallback(async () => {
         if (approveState !== ApproveState.NOT_APPROVED) return
         await approveCallback()
@@ -272,7 +284,7 @@ export function Trader(props: TraderProps) {
                 onSubmit={onSelectERC20TokenDialogSubmit}
                 onClose={onSelectERC20TokenDialogClose}
             />
-            {asyncInputToken.loading || asyncOutputToken.loading ? (
+            {asyncInputTokenDetailed.loading || asyncOutputTokenDetailed.loading ? (
                 <CircularProgress className={classes.progress} size={15} />
             ) : null}
         </div>

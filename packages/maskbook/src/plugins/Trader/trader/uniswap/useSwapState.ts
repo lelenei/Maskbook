@@ -1,13 +1,13 @@
 import { useReducer } from 'react'
-import type { Token } from '../../../../web3/types'
+import type { ERC20TokenDetailed, EtherTokenDetailed } from '../../../../web3/types'
 import { TradeStrategy } from '../../types'
 
 export interface SwapState {
     strategy: TradeStrategy
     inputAmount: string
     outputAmount: string
-    inputToken?: Token
-    outputToken?: Token
+    inputToken?: EtherTokenDetailed | ERC20TokenDetailed
+    outputToken?: EtherTokenDetailed | ERC20TokenDetailed
 }
 
 export enum SwapActionType {
@@ -24,11 +24,11 @@ export type SwapAction =
       }
     | {
           type: SwapActionType.UPDATE_INPUT_TOKEN
-          token?: Token
+          token?: EtherTokenDetailed | ERC20TokenDetailed
       }
     | {
           type: SwapActionType.UPDATE_OUTPUT_TOKEN
-          token?: Token
+          token?: EtherTokenDetailed | ERC20TokenDetailed
       }
     | {
           type: SwapActionType.UPDATE_INPUT_AMOUNT
@@ -77,7 +77,10 @@ function reducer(state: SwapState, action: SwapAction): SwapState {
     }
 }
 
-export function useSwapState(inputToken?: Token, outputToken?: Token) {
+export function useSwapState(
+    inputToken?: EtherTokenDetailed | ERC20TokenDetailed,
+    outputToken?: EtherTokenDetailed | ERC20TokenDetailed,
+) {
     return useReducer(reducer, {
         strategy: TradeStrategy.ExactIn,
         inputAmount: '0',

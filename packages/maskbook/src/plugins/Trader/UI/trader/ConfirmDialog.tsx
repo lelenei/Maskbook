@@ -5,12 +5,12 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 import { useStylesExtends } from '../../../../components/custom-ui-helper'
 import { useI18N } from '../../../../utils/i18n-next-ui'
 import { TradeSummary, TradeSummaryProps } from './TradeSummary'
-import type { Token } from '../../../../web3/types'
 import { TokenPanel } from './TokenPanel'
 import { useComputedTrade } from '../../trader/uniswap/useComputedTrade'
 import { PriceStaleWarnning } from './PriceStaleWarnning'
 import type { TradeStrategy } from '../../types'
 import { InjectedDialog } from '../../../../components/shared/InjectedDialog'
+import type { ERC20TokenDetailed, EtherTokenDetailed } from '../../../../web3/types'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -37,8 +37,8 @@ const useStyles = makeStyles((theme: Theme) =>
 export interface ConfirmDialogUIProps extends withClasses<never> {
     trade: Trade | null
     strategy: TradeStrategy
-    inputToken?: Token
-    outputToken?: Token
+    inputToken?: EtherTokenDetailed | ERC20TokenDetailed
+    outputToken?: EtherTokenDetailed | ERC20TokenDetailed
     open: boolean
     onConfirm: () => void
     onClose?: () => void

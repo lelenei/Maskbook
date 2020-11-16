@@ -1,7 +1,7 @@
 import { uniqBy } from 'lodash-es'
 import { formatChecksumAddress } from '../../plugins/Wallet/formatter'
 import { CONSTANTS } from '../constants'
-import type { TokenDetailed } from '../types'
+import type { AssetDetailed } from '../types'
 import { useChainId } from './useChainState'
 import { useConstant } from './useConstant'
 
@@ -10,7 +10,7 @@ import { useConstant } from './useConstant'
  * The order of result values is determined by the order they occur in the array.
  * @param listOfTokens
  */
-export function useTokensDetailedMerged(...listOfTokens: TokenDetailed[][]) {
+export function useAssetsDetailedMerged(...listOfTokens: AssetDetailed[][]) {
     const chainId = useChainId()
     const ETH_ADDRSS = useConstant(CONSTANTS, 'ETH_ADDRESS')
     return uniqBy(

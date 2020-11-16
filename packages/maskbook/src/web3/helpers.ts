@@ -3,7 +3,7 @@ import type { EventLog, TransactionReceipt } from 'web3-core'
 import Web3Utils, { AbiItem, AbiOutput } from 'web3-utils'
 import BigNumber from 'bignumber.js'
 import { CONSTANTS } from './constants'
-import { ChainId, EthereumTokenType, Token } from './types'
+import { ChainId, ERC20TokenDetailed, EthereumTokenType, EtherTokenDetailed } from './types'
 
 export function isSameAddress(addrA: string, addrB: string) {
     return addrA.toLowerCase() === addrB.toLowerCase()
@@ -51,7 +51,7 @@ export function getAllConstants<T extends Web3Constants, K extends keyof T>(cons
 }
 //#endregion
 
-export function createEetherToken(chainId: ChainId): Token {
+export function createEetherToken(chainId: ChainId) {
     return {
         type: EthereumTokenType.Ether,
         chainId,
@@ -59,16 +59,10 @@ export function createEetherToken(chainId: ChainId): Token {
         decimals: 18,
         name: 'Ether',
         symbol: 'ETH',
-    }
+    } as EtherTokenDetailed
 }
 
-export function createERC20Token(
-    chainId: ChainId,
-    address: string,
-    decimals: number,
-    name: string,
-    symbol: string,
-): Token {
+export function createERC20Token(chainId: ChainId, address: string, decimals: number, name: string, symbol: string) {
     return {
         type: EthereumTokenType.ERC20,
         chainId,
@@ -76,7 +70,7 @@ export function createERC20Token(
         decimals,
         name,
         symbol,
-    }
+    } as ERC20TokenDetailed
 }
 
 export function decodeOutputString(web3: Web3, abis: AbiOutput[], output: string) {

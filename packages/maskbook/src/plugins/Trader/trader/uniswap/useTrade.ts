@@ -4,15 +4,15 @@ import BigNumber from 'bignumber.js'
 import { toUniswapCurrencyAmount, toUniswapCurrency } from '../../helpers'
 import { useChainId } from '../../../../web3/hooks/useChainState'
 import { TradeStrategy } from '../../types'
-import type { Token } from '../../../../web3/types'
 import { useAllCommonPairs } from './useAllCommonPairs'
+import type { ERC20TokenDetailed, EtherTokenDetailed } from '../../../../web3/types'
 
 export function useTrade(
     strategy: TradeStrategy = TradeStrategy.ExactIn,
     inputAmount: string,
     outputAmount: string,
-    inputToken?: Token,
-    outputToken?: Token,
+    inputToken?: EtherTokenDetailed | ERC20TokenDetailed,
+    outputToken?: EtherTokenDetailed | ERC20TokenDetailed,
 ) {
     const isExactIn = strategy === TradeStrategy.ExactIn
     const pairs = useAllCommonPairs(inputToken, outputToken)
@@ -25,7 +25,12 @@ export function useTrade(
     }
 }
 
-export function useBestTradeExactIn(amount: string, inputToken?: Token, outputToken?: Token, pairs: Pair[] = []) {
+export function useBestTradeExactIn(
+    amount: string,
+    inputToken?: EtherTokenDetailed | ERC20TokenDetailed,
+    outputToken?: EtherTokenDetailed | ERC20TokenDetailed,
+    pairs: Pair[] = [],
+) {
     const chainId = useChainId()
     return useMemo(() => {
         if (new BigNumber(amount).isGreaterThan('0') && inputToken && outputToken && pairs.length > 0)
@@ -44,7 +49,12 @@ export function useBestTradeExactIn(amount: string, inputToken?: Token, outputTo
     }, [pairs, amount, chainId, inputToken, outputToken])
 }
 
-export function useBestTradeExactOut(amount: string, inputToken?: Token, outputToken?: Token, pairs: Pair[] = []) {
+export function useBestTradeExactOut(
+    amount: string,
+    inputToken?: EtherTokenDetailed | ERC20TokenDetailed,
+    outputToken?: EtherTokenDetailed | ERC20TokenDetailed,
+    pairs: Pair[] = [],
+) {
     const chainId = useChainId()
     return useMemo(() => {
         if (new BigNumber(amount).isGreaterThan('0') && inputToken && outputToken && pairs.length > 0)

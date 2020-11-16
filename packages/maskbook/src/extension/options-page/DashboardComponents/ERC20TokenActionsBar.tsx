@@ -8,8 +8,9 @@ import { useStylesExtends } from '../../../components/custom-ui-helper'
 import { useModal } from '../DashboardDialogs/Base'
 import { DashboardWalletHideTokenConfirmDialog } from '../DashboardDialogs/Wallet'
 import { useMenu } from '../../../utils/hooks/useMenu'
-import type { ERC20TokenRecord, WalletRecord } from '../../../plugins/Wallet/database/types'
+import type { WalletRecord } from '../../../plugins/Wallet/database/types'
 import { useI18N } from '../../../utils/i18n-next-ui'
+import type { ERC20TokenDetailed } from '../../../web3/types'
 
 const useStyles = makeStyles((theme) => ({
     more: {
@@ -17,12 +18,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-export interface TokenActionsBarProps extends withClasses<KeysInferFromUseStyles<typeof useStyles>> {
+export interface ERC20TokenActionsBarProps extends withClasses<KeysInferFromUseStyles<typeof useStyles>> {
     wallet: WalletRecord
-    token: ERC20TokenRecord
+    token: ERC20TokenDetailed
 }
 
-export function TokenActionsBar(props: TokenActionsBarProps) {
+export function ERC20TokenActionsBar(props: ERC20TokenActionsBarProps) {
     const { wallet, token } = props
 
     const { t } = useI18N()
