@@ -67,7 +67,7 @@ export function useAllCommonPairs(
                           return true
                       })
                 : [],
-        [[uniswapTokenA?.address, uniswapTokenB?.address].sort().join(), bases, basePairs, chainId],
+        [uniswapTokenA, uniswapTokenB, bases, basePairs, chainId],
     )
     const allPairs = useUniswapPairs(allPairCombinations as TokenPair[])
     // only pass along valid pairs, non-duplicated pairs

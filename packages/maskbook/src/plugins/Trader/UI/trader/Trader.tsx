@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react'
-import { makeStyles, Theme, createStyles, CircularProgress } from '@material-ui/core'
+import { makeStyles, createStyles, CircularProgress } from '@material-ui/core'
 import BigNumber from 'bignumber.js'
 import { useStylesExtends } from '../../../../components/custom-ui-helper'
 import { ERC20TokenDetailed, EthereumTokenType, EtherTokenDetailed } from '../../../../web3/types'
@@ -24,7 +24,7 @@ import { WalletMessages } from '../../../Wallet/messages'
 import { useShareLink } from '../../../../utils/hooks/useShareLink'
 import { useTokenDetailed } from '../../../../web3/hooks/useTokenDetailed'
 
-const useStyles = makeStyles((theme: Theme) => {
+const useStyles = makeStyles((theme) => {
     return createStyles({
         root: {
             display: 'flex',
@@ -36,6 +36,9 @@ const useStyles = makeStyles((theme: Theme) => {
             bottom: theme.spacing(1),
             right: theme.spacing(1),
             position: 'absolute',
+        },
+        summary: {
+            marginTop: theme.spacing(1),
         },
         router: {
             marginTop: 0,
@@ -75,7 +78,7 @@ export function Trader(props: TraderProps) {
     )
     const asyncOutputTokenDetailed = useTokenDetailed(
         isEtherOutput ? EthereumTokenType.Ether : EthereumTokenType.ERC20,
-        isEtherOutput ? ETH_ADDRESS : inputTokenAddress,
+        isEtherOutput ? ETH_ADDRESS : outputTokenAddress,
         {
             name,
             symbol,
@@ -267,8 +270,20 @@ export function Trader(props: TraderProps) {
                 onApprove={onApprove}
                 onSwap={() => setOpenConfirmDialog(true)}
             />
-            <TradeSummary trade={trade.v2Trade} strategy={strategy} inputToken={inputToken} outputToken={outputToken} />
-            <TradeRoute classes={{ root: classes.router }} trade={trade.v2Trade} strategy={strategy} />
+            {asyncInputTokenDetailed.loading || asyncOutputTokenDetailed.loading ? (
+                <CircularProgress className={classes.progress} size={15} />
+            ) : (
+                <>
+                    <TradeSummary
+                        classes={{ root: classes.summary }}
+                        trade={trade.v2Trade}
+                        strategy={strategy}
+                        inputToken={inputToken}
+                        outputToken={outputToken}
+                    />
+                    <TradeRoute classes={{ root: classes.router }} trade={trade.v2Trade} strategy={strategy} />
+                </>
+            )}
             <ConfirmDialog
                 trade={trade.v2Trade}
                 strategy={strategy}
@@ -284,9 +299,6 @@ export function Trader(props: TraderProps) {
                 onSubmit={onSelectERC20TokenDialogSubmit}
                 onClose={onSelectERC20TokenDialogClose}
             />
-            {asyncInputTokenDetailed.loading || asyncOutputTokenDetailed.loading ? (
-                <CircularProgress className={classes.progress} size={15} />
-            ) : null}
         </div>
     )
 }
