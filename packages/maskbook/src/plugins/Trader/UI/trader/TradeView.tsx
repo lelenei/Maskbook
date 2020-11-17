@@ -8,8 +8,9 @@ import { SettingsPanel } from './SettingsPanel'
 const useStyles = makeStyles((theme) => {
     return createStyles({
         root: {
-            width: 350,
+            maxWidth: 450,
             margin: '0 auto',
+            padding: `0 ${theme.spacing(3)}px`,
             position: 'relative',
         },
         bar: {
@@ -20,9 +21,9 @@ const useStyles = makeStyles((theme) => {
         settings: {
             zIndex: 1,
             top: 0,
-            right: 0,
+            right: theme.spacing(3),
             bottom: 0,
-            left: 0,
+            left: theme.spacing(3),
             position: 'absolute',
         },
     })

@@ -1,11 +1,12 @@
-import { MutationObserverWatcher } from '@dimensiondev/holoflows-kit/es'
 import React from 'react'
+import { MutationObserverWatcher } from '@dimensiondev/holoflows-kit/es'
+import { SearchResultBox } from '../../../components/InjectedComponents/SearchResultBox'
 import { Flags } from '../../../utils/flags'
 import { renderInShadowRoot } from '../../../utils/shadow-root/renderInShadowRoot'
 import { searchResultHeadingSelector } from '../utils/selector'
 import { twitterUrl } from '../utils/url'
 
-export function injectSearchResultAtTwitter() {
+export function injectSearchResultBoxAtTwitter() {
     if (location.hostname.indexOf(twitterUrl.hostIdentifier) === -1) return
     if (location.pathname !== '/search') return
     const watcher = new MutationObserverWatcher(searchResultHeadingSelector())
@@ -17,9 +18,9 @@ export function injectSearchResultAtTwitter() {
             subtree: true,
         })
 
-    renderInShadowRoot(<SearchBoxAtTwitter />, { shadow: () => watcher.firstDOMProxy.afterShadow })
+    renderInShadowRoot(<SearchResultBoxAtTwitter />, { shadow: () => watcher.firstDOMProxy.afterShadow })
 }
 
-function SearchBoxAtTwitter() {
-    return <div>Search Box At Twitter</div>
+function SearchResultBoxAtTwitter() {
+    return <SearchResultBox keyword="$UNI" />
 }

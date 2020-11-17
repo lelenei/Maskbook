@@ -5,7 +5,7 @@ import { injectPostInspectorAtTwitter } from './injectPostInspector'
 import { injectPostDialogIconAtTwitter } from './injectPostDialogIcon'
 import { injectPostReplacerAtTwitter } from './injectPostReplacer'
 import { injectPageInspectorDefault } from '../../../social-network/defaults/injectPageInspector'
-import { injectSearchResultAtTwitter } from './injectSearchResult'
+import { injectSearchResultBoxAtTwitter } from './injectSearchResultBox'
 
 const injectPostBox = () => {
     injectPostDialogAtTwitter()
@@ -15,7 +15,7 @@ const injectPostBox = () => {
 
 export const twitterUIInjections: SocialNetworkUIInjections = {
     injectPostBox,
-    injectSearchResultBox: injectSearchResultAtTwitter,
+    injectSearchResultBox: injectSearchResultBoxAtTwitter,
     injectPostReplacer: injectPostReplacerAtTwitter,
     injectPostInspector: injectPostInspectorAtTwitter,
     injectPageInspector: injectPageInspectorDefault(),

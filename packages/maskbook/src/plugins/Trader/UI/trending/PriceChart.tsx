@@ -10,7 +10,7 @@ const DEFAULT_DIMENSION: Dimension = {
     right: 16,
     bottom: 32,
     left: 16,
-    width: 416,
+    width: 598,
     height: 200,
 }
 
