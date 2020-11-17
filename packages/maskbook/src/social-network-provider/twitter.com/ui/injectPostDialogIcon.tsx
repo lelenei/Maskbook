@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { twitterUrl } from '../utils/url'
 import { MutationObserverWatcher, LiveSelector } from '@dimensiondev/holoflows-kit'
-import { posteditorToolbarSeelctor } from '../utils/selector'
+import { posteditorToolbarSelector } from '../utils/selector'
 import { renderInShadowRoot } from '../../../utils/shadow-root/renderInShadowRoot'
 import { PostDialogIcon } from '../../../components/InjectedComponents/PostDialogIcon'
 import { MaskMessage } from '../../../utils/messages'
@@ -12,7 +12,7 @@ import { makeStyles, Theme } from '@material-ui/core'
 export function injectPostDialogIconAtTwitter() {
     if (location.hostname.indexOf(twitterUrl.hostIdentifier) === -1) return
     const emptyNode = document.createElement('div')
-    renderPostDialogIconTo(posteditorToolbarSeelctor().map((x) => (isMobile() && isCompose() ? x : emptyNode)))
+    renderPostDialogIconTo(posteditorToolbarSelector().map((x) => (isMobile() && isCompose() ? x : emptyNode)))
 }
 
 function renderPostDialogIconTo<T>(ls: LiveSelector<T, true>) {

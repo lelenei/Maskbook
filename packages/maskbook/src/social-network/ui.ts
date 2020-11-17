@@ -117,6 +117,14 @@ export interface SocialNetworkUIInjections {
      */
     injectKnownIdentity?: (() => void) | 'disabled'
     /**
+     * This function should inject UI in the search prediction box
+     */
+    injectSearchPredictionBox?: (() => void) | 'disabled'
+    /**
+     * This function should inject UI in the main search result box
+     */
+    injectSearchResultBox?: (() => void) | 'disabled'
+    /**
      * This is an optional function.
      *
      * This function should inject a link to open the options page.
@@ -326,12 +334,17 @@ export function activateSocialNetworkUI(): void {
                     if (val.length === 1) ui.currentIdentity.value = val[0]
                 })
                 {
-                    const mountSettingsLink = ui.injectDashboardEntrance
-                    if (Flags.inject_dashboard_entrance && typeof mountSettingsLink === 'function') mountSettingsLink()
+                    if (Flags.inject_search_result_box && typeof ui.injectSearchResultBox === 'function')
+                        ui.injectSearchResultBox()
+                    if (Flags.inject_search_prediction_box && typeof ui.injectSearchPredictionBox === 'function')
+                        ui.injectSearchPredictionBox()
                 }
                 {
-                    const mountKnownIdentity = ui.injectKnownIdentity
-                    if (typeof mountKnownIdentity === 'function') mountKnownIdentity()
+                    if (Flags.inject_dashboard_entrance && typeof ui.injectDashboardEntrance === 'function')
+                        ui.injectDashboardEntrance()
+                }
+                {
+                    if (typeof ui.injectKnownIdentity === 'function') ui.injectKnownIdentity()
                 }
                 ui.lastRecognizedIdentity.addListener((id) => {
                     if (id.identifier.isUnknown) return

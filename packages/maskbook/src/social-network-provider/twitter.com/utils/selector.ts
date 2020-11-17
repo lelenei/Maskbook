@@ -40,7 +40,11 @@ export const postEditorDraftContentSelector = () => {
         '.public-DraftEditor-content, [contenteditable][aria-label][spellcheck]',
     )
 }
-export const posteditorToolbarSeelctor: () => LiveSelector<E, true> = () =>
+
+export const searchResultHeadingSelector: () => LiveSelector<E, true> = () =>
+    querySelector<E>('[data-testid="primaryColumn"] [role="region"] [role="heading"]')
+
+export const posteditorToolbarSelector: () => LiveSelector<E, true> = () =>
     querySelector<E>('[data-testid="toolBar"] > div > *:last-child')
 
 export const newPostButtonSelector = () => querySelector<E>('[data-testid="SideNav_NewTweet_Button"]')
