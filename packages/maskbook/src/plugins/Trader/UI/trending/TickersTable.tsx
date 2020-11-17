@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 export interface TickersTableProps {
-    platform: DataProvider
+    dataProvider: DataProvider
     tickers: Ticker[]
 }
 

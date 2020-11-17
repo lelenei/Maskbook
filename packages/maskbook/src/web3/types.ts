@@ -70,7 +70,7 @@ export interface AssetDetailed {
      */
     balance: string
     /**
-     * The estiEated price
+     * The estimated price
      */
     price?: {
         [key in CurrencyType]: string

@@ -8,7 +8,6 @@ import { twitterUrl } from '../utils/url'
 
 export function injectSearchResultBoxAtTwitter() {
     if (location.hostname.indexOf(twitterUrl.hostIdentifier) === -1) return
-    if (location.pathname !== '/search') return
     const watcher = new MutationObserverWatcher(searchResultHeadingSelector())
         .setDOMProxyOption({
             afterShadowRootInit: { mode: Flags.using_ShadowDOM_attach_mode },

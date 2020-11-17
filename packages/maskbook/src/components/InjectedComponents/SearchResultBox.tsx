@@ -20,7 +20,7 @@ export function SearchResultBox(props: SearchResultBoxProps) {
     return (
         <div className={classes.root}>
             <SearchResultView
-                name="UNI"
+                name="RING"
                 dataProviders={[DataProvider.COIN_GECKO]}
                 tradeProviders={[TradeProvider.UNISWAP]}
             />

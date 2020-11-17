@@ -99,6 +99,15 @@ export async function getAvailableDataProviders(keyword: string) {
 export async function getCoinInfo(id: string, dataProvider: DataProvider, currency: Currency): Promise<Trending> {
     if (dataProvider === DataProvider.COIN_GECKO) {
         const info = await coinGeckoAPI.getCoinInfo(id)
+        const platform_url = `https://www.coingecko.com/en/coins/${info.id}`
+        const twitter_url = info.links.twitter_screen_name
+            ? `https://twitter.com/${info.links.twitter_screen_name}`
+            : ''
+        const facebook_url = info.links.facebook_username ? `https://t.me/${info.links.facebook_username}` : ''
+        const telegram_url = info.links.telegram_channel_identifier
+            ? `https://t.me/${info.links.telegram_channel_identifier}`
+            : ''
+
         return {
             lastUpdated: info.last_updated,
             dataProvider,
@@ -113,7 +122,15 @@ export async function getCoinInfo(id: string, dataProvider: DataProvider, curren
                 description: info.description.en,
                 market_cap_rank: info.market_cap_rank,
                 image_url: info.image.small,
-                home_url: info.links.homepage.filter(Boolean)[0],
+                tags: info.categories.filter(Boolean),
+                announcement_urls: info.links.announcement_url.filter(Boolean),
+                community_urls: [twitter_url, facebook_url, telegram_url, ...info.links.chat_url].filter(Boolean),
+                home_urls: info.links.homepage.filter(Boolean),
+                blockchain_urls: info.links.blockchain_site.filter(Boolean),
+                platform_url,
+                facebook_url,
+                twitter_url,
+                telegram_url,
                 eth_address:
                     resolveCoinAddress(id, DataProvider.COIN_GECKO) ??
                     (info.asset_platform_id === 'ethereum' ? info.contract_address : undefined),
@@ -155,7 +172,7 @@ export async function getCoinInfo(id: string, dataProvider: DataProvider, curren
             eth_address:
                 resolveCoinAddress(id, DataProvider.COIN_MARKET_CAP) ??
                 (coinInfo.platform?.name === 'Ethereum' ? coinInfo.platform?.token_address : undefined),
-            home_url: coinInfo.urls.website[0],
+            home_urls: coinInfo.urls.website.filter(Boolean),
         },
         currency,
         dataProvider,

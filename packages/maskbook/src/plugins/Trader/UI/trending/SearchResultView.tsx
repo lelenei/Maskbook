@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
     makeStyles,
     Avatar,
@@ -15,7 +15,7 @@ import {
     Tab,
     Tabs,
 } from '@material-ui/core'
-import { last } from 'lodash-es'
+import { first, last } from 'lodash-es'
 import { AlertCircle } from 'react-feather'
 import { DataProvider, TradeProvider } from '../../types'
 import {
@@ -37,7 +37,6 @@ import { Skeleton } from '@material-ui/lab'
 import { Days, PriceChartDaysControl } from './PriceChartDaysControl'
 import { useCurrentDataProvider } from '../../trending/useCurrentDataProvider'
 import { useCurrentTradeProvider } from '../../trending/useCurrentTradeProvider'
-import { useCurrentCurrency } from '../../trending/useCurrentCurrency'
 import { useI18N } from '../../../../utils/i18n-next-ui'
 import { CoinMarketCapIcon } from '../../../../resources/CoinMarketCapIcon'
 import { useConstant } from '../../../../web3/hooks/useConstant'
@@ -51,6 +50,7 @@ const useStyles = makeStyles((theme: Theme) => {
     const internalName = getActivatedUI()?.internalName
     return createStyles({
         root: {
+            minHeight: 440,
             borderRadius: 0,
             marginBottom: theme.spacing(2),
             '&::-webkit-scrollbar': {
@@ -197,7 +197,6 @@ export interface SearchResultViewProps extends withClasses<KeysInferFromUseStyle
     name: string
     dataProviders: DataProvider[]
     tradeProviders: TradeProvider[]
-    onUpdate?: () => void
 }
 export function SearchResultView(props: SearchResultViewProps) {
     const ETH_ADDRESS = useConstant(CONSTANTS, 'ETH_ADDRESS')
@@ -208,8 +207,11 @@ export function SearchResultView(props: SearchResultViewProps) {
 
     //#region trending
     const dataProvider = useCurrentDataProvider(props.dataProviders)
-    const { value: currency, loading: loadingCurrency } = useCurrentCurrency(dataProvider)
-    const { value: trending, loading: loadingTrending } = useTrending(props.name, dataProvider, currency)
+    const {
+        value: { currency, trending },
+        error: trendingError,
+        loading: loadingTrending,
+    } = useTrending(props.name, dataProvider)
     //#endregion
 
     //#region swap
@@ -226,25 +228,13 @@ export function SearchResultView(props: SearchResultViewProps) {
     })
     //#endregion
 
-    //#region api ready callback
-    useEffect(() => {
-        props.onUpdate?.()
-    }, [tabIndex, loadingCurrency, loadingTrending])
-    //#endregion
-
-    //#region display loading skeleton
-    if (loadingCurrency || loadingTrending) return <TrendingViewSkeleton />
+    //#region no available platform
+    if (props.dataProviders.length === 0) return null
     //#endregion
 
     //#region error handling
-    // error: no available platform
-    if (props.dataProviders.length === 0) return null
-
-    // error: fail to load currency
-    if (!currency) return <TrendingViewError message="Fail to load currency info." />
-
     // error: unknown coin or api error
-    if (!trending)
+    if (trendingError)
         return (
             <TrendingViewError
                 message={
@@ -262,6 +252,9 @@ export function SearchResultView(props: SearchResultViewProps) {
                 }
             />
         )
+
+    //#region display loading skeleton
+    if (loadingTrending || !currency || !trending) return <TrendingViewSkeleton />
     //#endregion
 
     const { coin, market, tickers } = trending
@@ -272,7 +265,7 @@ export function SearchResultView(props: SearchResultViewProps) {
             <CardHeader
                 className={classes.header}
                 avatar={
-                    <Linking href={coin.home_url}>
+                    <Linking href={first(coin.home_urls)}>
                         <Avatar className={classes.avatar} src={coin.image_url} alt={coin.symbol} />
                     </Linking>
                 }
@@ -284,7 +277,7 @@ export function SearchResultView(props: SearchResultViewProps) {
                                     #{coin.market_cap_rank}
                                 </span>
                             ) : null}
-                            <Linking href={coin.home_url}>{coin.symbol.toUpperCase()}</Linking>
+                            <Linking href={first(coin.home_urls)}>{coin.symbol.toUpperCase()}</Linking>
                             <span>{` / ${currency.name}`}</span>
                         </Typography>
                     </Box>
@@ -333,7 +326,9 @@ export function SearchResultView(props: SearchResultViewProps) {
                         <Tab className={classes.tab} label={t('plugin_trader_tab_exchange')} />
                         {canSwap ? <Tab className={classes.tab} label={t('plugin_trader_tab_swap')} /> : null}
                     </Tabs>
-                    {tabIndex === 0 ? <>{market ? <CoinMarketPanel market={market} /> : null}</> : null}
+                    {tabIndex === 0 ? (
+                        <>{market ? <CoinMarketPanel dataProvider={dataProvider} trending={trending} /> : null}</>
+                    ) : null}
                     {tabIndex === 1 ? (
                         <>
                             {market ? <PriceChangedTable market={market} /> : null}
@@ -342,7 +337,7 @@ export function SearchResultView(props: SearchResultViewProps) {
                             </PriceChart>
                         </>
                     ) : null}
-                    {tabIndex === 2 ? <TickersTable tickers={tickers} platform={dataProvider} /> : null}
+                    {tabIndex === 2 ? <TickersTable tickers={tickers} dataProvider={dataProvider} /> : null}
                     {tabIndex === 3 && canSwap ? (
                         <TradeView
                             TraderProps={{
@@ -369,7 +364,7 @@ export function SearchResultView(props: SearchResultViewProps) {
                     </Link>
                 </Typography>
 
-                {tabIndex === 0 || tabIndex === 1 ? (
+                {tabIndex === 0 || tabIndex === 1 || tabIndex === 2 ? (
                     <Typography className={classes.footnote} color="textSecondary" variant="subtitle2">
                         <span>Data source </span>
                         <Link
@@ -393,7 +388,7 @@ export function SearchResultView(props: SearchResultViewProps) {
                     </Typography>
                 ) : null}
 
-                {tabIndex === 2 ? (
+                {tabIndex === 3 ? (
                     <Typography className={classes.footnote} color="textSecondary" variant="subtitle2">
                         <span>Based on </span>
                         <Link
