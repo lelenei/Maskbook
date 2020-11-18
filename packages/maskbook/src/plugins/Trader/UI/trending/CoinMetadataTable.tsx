@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) =>
             padding: theme.spacing(2),
         },
         container: {
-            overflow: 'visible',
+            borderRadius: 0,
             boxSizing: 'border-box',
             '&::-webkit-scrollbar': {
                 display: 'none',
@@ -92,7 +92,7 @@ export function CoinMetadataTable(props: CoinMetadataTableProps) {
                             </TableCell>
                             <TableCell>
                                 {trending.coin.home_urls.map((x) => (
-                                    <Linking href={x} LinkProps={{ className: classes.link }} />
+                                    <Linking key={x} href={x} LinkProps={{ className: classes.link }} />
                                 ))}
                             </TableCell>
                         </TableRow>
@@ -106,7 +106,7 @@ export function CoinMetadataTable(props: CoinMetadataTableProps) {
                             </TableCell>
                             <TableCell>
                                 {trending.coin.blockchain_urls.map((x) => (
-                                    <Linking href={x} LinkProps={{ className: classes.link }} />
+                                    <Linking key={x} href={x} LinkProps={{ className: classes.link }} />
                                 ))}
                             </TableCell>
                         </TableRow>
@@ -137,7 +137,7 @@ export function CoinMetadataTable(props: CoinMetadataTableProps) {
                             </TableCell>
                             <TableCell>
                                 {trending.coin.community_urls.map((x) => (
-                                    <Linking href={x} LinkProps={{ className: classes.link }} />
+                                    <Linking key={x} href={x} LinkProps={{ className: classes.link }} />
                                 ))}
                             </TableCell>
                         </TableRow>
@@ -151,7 +151,7 @@ export function CoinMetadataTable(props: CoinMetadataTableProps) {
                             </TableCell>
                             <TableCell>
                                 {trending.coin.tags.map((x) => (
-                                    <Linking href={x} TypographyProps={{ className: classes.tag }} />
+                                    <Linking key={x} href={x} TypographyProps={{ className: classes.tag }} />
                                 ))}
                             </TableCell>
                         </TableRow>

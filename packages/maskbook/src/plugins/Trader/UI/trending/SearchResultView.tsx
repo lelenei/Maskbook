@@ -272,11 +272,6 @@ export function SearchResultView(props: SearchResultViewProps) {
                 title={
                     <Box display="flex" alignItems="center" justifyContent="space-between">
                         <Typography variant="h6">
-                            {typeof coin.market_cap_rank === 'number' ? (
-                                <span className={classes.rank} title="Market Cap Rank">
-                                    #{coin.market_cap_rank}
-                                </span>
-                            ) : null}
                             <Linking href={first(coin.home_urls)}>{coin.symbol.toUpperCase()}</Linking>
                             <span>{` / ${currency.name}`}</span>
                         </Typography>

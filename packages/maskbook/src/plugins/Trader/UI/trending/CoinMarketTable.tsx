@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) =>
             padding: theme.spacing(2),
         },
         container: {
+            borderRadius: 0,
             boxSizing: 'border-box',
             '&::-webkit-scrollbar': {
                 display: 'none',

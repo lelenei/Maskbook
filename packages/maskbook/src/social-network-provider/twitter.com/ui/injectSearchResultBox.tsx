@@ -21,5 +21,5 @@ export function injectSearchResultBoxAtTwitter() {
 }
 
 function SearchResultBoxAtTwitter() {
-    return <SearchResultBox keyword="$UNI" />
+    return <SearchResultBox />
 }
