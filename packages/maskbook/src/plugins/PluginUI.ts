@@ -16,6 +16,8 @@ import { Election2020PluginDefine } from './Election2020/define'
 import { TransakPluginDefine } from './Transak/define'
 import { COTM_PluginDefine } from './COTM/define'
 
+import { ITOPluginDefine } from './ITO/define'
+
 plugins.add(WalletPluginDefine)
 plugins.add(GitcoinPluginDefine)
 plugins.add(RedPacketPluginDefine)
@@ -26,3 +28,4 @@ if (Flags.transak_enabled) plugins.add(TransakPluginDefine)
 if (Flags.election2020_enabled) plugins.add(Election2020PluginDefine)
 if (Flags.COTM_enabled) plugins.add(COTM_PluginDefine)
 if (process.env.STORYBOOK) plugins.add(StorybookPluginDefine)
+plugins.add(ITOPluginDefine)
