@@ -1,36 +1,43 @@
-import { createStyles, makeStyles, MenuProps, InputLabel, TextField, InputAdornment, Box } from '@material-ui/core'
-import { v4 as uuid } from 'uuid'
-import { useState, useCallback, ChangeEvent, useMemo } from 'react'
+import { createStyles, makeStyles, MenuProps, Box, TextField, Grid, InputLabel } from '@material-ui/core'
+import { useState, useCallback, useMemo, useEffect, ChangeEvent } from 'react'
 import { useStylesExtends } from '../../../components/custom-ui-helper'
-import { useCurrentIdentity } from '../../../components/DataSource/useActivatedUI'
-import { TokenAmountPanel } from '../../../web3/UI/TokenAmountPanel'
 import { EthereumStatusBar } from '../../../web3/UI/EthereumStatusBar'
 import { useI18N } from '../../../utils/i18n-next-ui'
-import { useTokenBalance } from '../../../web3/hooks/useTokenBalance'
 import { EthereumTokenType, ERC20TokenDetailed, EtherTokenDetailed } from '../../../web3/types'
 import { useEtherTokenDetailed } from '../../../web3/hooks/useEtherTokenDetailed'
 import { useAccount } from '../../../web3/hooks/useAccount'
 import { useChainId, useChainIdValid } from '../../../web3/hooks/useChainState'
-import ActionButton from '../../../extension/options-page/DashboardComponents/ActionButton'
-import { useCreateCallback } from '../hooks/useCreateCallback'
-
-import { ITOTokenSelect } from './ITOSelect'
 import { useConstant } from '../../../web3/hooks/useConstant'
 import { ITO_CONSTANTS } from '../constants'
 import { ApproveState, useERC20TokenApproveCallback } from '../../../web3/hooks/useERC20TokenApproveCallback'
+import type { ITO_JSONPayload } from '../types'
+import { ITOExchangeTokenPanel } from './ITOExchangeTokenPanel'
+import { useCurrentIdentity } from '../../../components/DataSource/useActivatedUI'
 import BigNumber from 'bignumber.js'
+import ActionButton from '../../../extension/options-page/DashboardComponents/ActionButton'
+import { v4 as uuid } from 'uuid'
+import { ITOSettings, useCreateCallback } from '../hooks/useCreateCallback'
+import { ITOConfirmDialog } from './ITOConfirmDialog'
 
 const useStyles = makeStyles((theme) =>
     createStyles({
         line: {
-            display: 'flex',
             margin: theme.spacing(1),
+            display: 'flex',
+        },
+        flow: {
+            margin: theme.spacing(1),
+            textAlign: 'center',
         },
         bar: {
             padding: theme.spacing(0, 2, 2),
         },
         input: {
             padding: theme.spacing(1),
+            flex: 1,
+        },
+        label: {
+            paddingLeft: theme.spacing(2),
         },
         tip: {
             fontSize: 12,
@@ -44,7 +51,7 @@ const useStyles = makeStyles((theme) =>
 )
 
 export interface ITOFormProps extends withClasses<KeysInferFromUseStyles<typeof useStyles>> {
-    onCreate?(payload: any): void
+    onCreate?(payload: ITO_JSONPayload): void
     SelectMenuProps?: Partial<MenuProps>
 }
 
@@ -56,66 +63,33 @@ export function ITOForm(props: ITOFormProps) {
     const chainId = useChainId()
     const chainIdValid = useChainIdValid()
 
-    const { value: fromEtherTokenDetailed } = useEtherTokenDetailed()
-    const [fromToken, setFromToken] = useState<EtherTokenDetailed | ERC20TokenDetailed | undefined>(
-        fromEtherTokenDetailed,
-    )
+    const { value: tokenDetailed } = useEtherTokenDetailed()
+    const [token, setToken] = useState<EtherTokenDetailed | ERC20TokenDetailed | undefined>(tokenDetailed)
+    const [amount, setAmount] = useState('')
+    const [message, setMessage] = useState('')
+    const [totalOfPerWallet, setTotalOfPerWallet] = useState(1)
 
-    const { value: toEtherTokenDetailed } = useEtherTokenDetailed()
-    const [toToken, setToToken] = useState<EtherTokenDetailed | ERC20TokenDetailed | undefined>(toEtherTokenDetailed)
-
-    const [message, setMessage] = useState('Best Wishes!')
-
-    // balance
-    const { value: tokenBalance = '0', loading: loadingTokenBalance } = useTokenBalance(
-        fromToken?.type ?? EthereumTokenType.Ether,
-        fromToken?.address ?? '',
-    )
-    const [selectedDate, setSelectedDate] = useState(new Date())
-
-    const [ratio, setRatio] = useState<number | ''>('')
-    const onRatioChange = useCallback(
-        (ev: ChangeEvent<HTMLInputElement>) => {
-            const ratio_ = ev.currentTarget.value.replace(/[,\.]/g, '')
-            if (ratio_ === '') {
-                setRatio('')
-            } else {
-                const parsed = Number.parseInt(ratio_, 10)
-                if (parsed >= 0) {
-                    setRatio(parsed)
-                }
-            }
-        },
-        [ratio],
-    )
-
-    const [eth, setEth] = useState('0')
-
-    const [amount, setAmount] = useState('0')
-
-    const [allocationPerWallet, setAllocationPerWallet] = useState<number | ''>('')
-    const onAllocationPerWalletChange = useCallback(
-        (ev: ChangeEvent<HTMLInputElement>) => {
-            const allocationPerWallet_ = ev.currentTarget.value.replace(/[,].]/g, '')
-            if (allocationPerWallet_ === '') {
-                setAllocationPerWallet('')
-            } else {
-                const tmp = Number.parseInt(allocationPerWallet_, 10)
-                if (tmp >= 0) {
-                    setAllocationPerWallet(tmp)
-                }
-            }
-        },
-        [allocationPerWallet],
-    )
+    const nowString = new Date().toLocaleString()
+    console.log(nowString)
+    const [beginTime, setBeginTime] = useState(nowString)
+    const [endTime, setEndTime] = useState(nowString)
 
     const senderName = useCurrentIdentity()?.linkedPersona?.nickname ?? 'Unknown User'
-    const ITOContractAddress = useConstant(ITO_CONSTANTS, 'HAPPY_ITO_ADDRESS')
+
+    const ITOContractAddress = useConstant(ITO_CONSTANTS, 'ITO_ADDRESS')
     const [approveState, approveCallback] = useERC20TokenApproveCallback(
-        fromToken?.type === EthereumTokenType.ERC20 ? fromToken.address : '',
+        token?.type === EthereumTokenType.ERC20 ? token.address : '',
         amount,
         ITOContractAddress,
     )
+
+    const onAmountChange = useCallback((amount: string, key: string) => {
+        setAmount(amount)
+    }, [])
+
+    const onTokenChange = useCallback((token: EtherTokenDetailed | ERC20TokenDetailed, key: string) => {
+        setToken(token)
+    }, [])
 
     const onApprove = useCallback(async () => {
         if (approveState !== ApproveState.NOT_APPROVED) {
@@ -125,154 +99,184 @@ export function ITOForm(props: ITOFormProps) {
     }, [approveState, approveCallback])
 
     const approveRequired = approveState === ApproveState.NOT_APPROVED || approveState === ApproveState.PENDING
-    console.log('*******************')
-    console.log(approveRequired)
-    console.log(ApproveState.PENDING)
-    console.log('*********************')
+    const [tokenAndAmount, setTokenAndAmount] = useState([])
 
-    const [createSettings, createState, createCallback, resetCreateCallback] = useCreateCallback({
+    const onTotalOfPerWalletChange = useCallback((ev: ChangeEvent<HTMLInputElement>) => {
+        const total = ev.currentTarget.value.replace(/[,\.]/g, '')
+        if (total === '') setTotalOfPerWallet('')
+        else if (/^[1-9]+\d*$/.test(total)) {
+            setTotalOfPerWallet(Number.parseInt(total, 10))
+        }
+    }, [])
+
+    const onDaysChange = useCallback((ev: ChangeEvent<HTMLInputElement>) => {
+        setBeginTime(ev.target.value)
+    }, [])
+    const onHoursChange = useCallback((ev: ChangeEvent<HTMLInputElement>) => {
+        setEndTime(ev.target.value)
+    }, [])
+
+    const itoSettings: ITOSettings = {
         password: uuid(),
-        duration: 60 * 60 * 24,
+        duration: 60 /* seconds */ * 60 /* mins */ * 24 /* hours */,
         name: senderName,
-        fromToken,
-        toToken,
         message,
-        end_date: selectedDate,
-        total: allocationPerWallet,
-        ratio,
-    })
+        total: totalOfPerWallet,
+        token,
+        amount: new BigNumber(amount).toFixed(),
+        rations: tokenAndAmount.filter((_, idx) => idx !== 0).map((item) => new BigNumber(item[0]).toFixed()),
+        exchanges: tokenAndAmount.filter((_, idx) => idx !== 0).map((item) => item[1]),
+        beginTime,
+        endTime,
+    }
+
+    const [createSettings, createState, createCallback, resetCreateCallback] = useCreateCallback(itoSettings)
+
+    useEffect(() => {
+        if (tokenAndAmount.length > 0) {
+            const [first] = tokenAndAmount
+            if (first) {
+                setToken(first[1])
+                setAmount(first[0])
+            }
+        }
+    }, [tokenAndAmount])
+
+    const onMessageChange = useCallback((ev: ChangeEvent<HTMLInputElement>) => {
+        setMessage(ev.target.value)
+    }, [])
+
+    const [confirm, setOpenConfirmDialog] = useState(false)
+    const onNext = useCallback(() => {
+        setOpenConfirmDialog(true)
+    }, [])
+    const ConfirmDialogClose = useCallback(() => {
+        setOpenConfirmDialog(false)
+    }, [])
+    const onITOConfirmDialogSubmit = useCallback(() => {
+        ConfirmDialogClose()
+    }, [ConfirmDialogClose])
 
     const validationMessage = useMemo(() => {
-        if (!fromToken) {
-            return 'Select from token'
+        if (new BigNumber(amount).isZero()) {
+            return 'Enter an amount'
         }
-        if (!toToken) {
-            return 'select to token'
+        if (!tokenAndAmount || tokenAndAmount.length === 0) {
+            return 'Enter token or amount'
         }
 
-        if (new BigNumber(ratio || '0').isZero()) {
-            return 'Enter swap ratio'
-        }
-        if (new BigNumber(amount).isZero()) {
-            return 'Enter amount'
-        }
-        if (new BigNumber(alloctionPerWallet || '0').isZero()) {
-            return 'Enter allocation per wallet'
-        }
         return ''
-    }, [fromToken, toToken])
+    }, [amount, tokenAndAmount])
 
     return (
         <>
             <EthereumStatusBar classes={{ root: classes.bar }} />
-            <div className={classes.line}>
-                <ITOTokenSelect className={classes.input} title="From" token={fromToken} onTokenChange={setFromToken} />
-                <ITOTokenSelect className={classes.input} title="To" token={toToken} onTokenChange={setToToken} />
-            </div>
-            <div className={classes.line} display="flex">
-                <Box className={classes.input}>
-                    <InputLabel>Swap ratio</InputLabel>
-                    {toToken ? <InputLabel>1 {toToken.symbol}=</InputLabel> : ''}
-                </Box>
-                <Box style={{ flex: 1 }} className={classes.input}>
-                    <TextField
-                        label="Swap ratio"
-                        requried
-                        fullWidth
-                        type="text"
-                        value={ratio}
-                        onChange={onRatioChange}
-                        InputProps={{
-                            inputProps: {},
-                            endAdornment: <InputAdornment position="end">{fromToken?.symbol ?? ''}</InputAdornment>,
-                        }}
-                    />
-                </Box>
-            </div>
-            <div className={classes.line}>
-                <TokenAmountPanel
-                    classes={{ root: classes.input }}
-                    label="Amount"
-                    amount={amount}
-                    balance={tokenBalance}
-                    token={fromToken}
-                    onAmountChange={setAmount}
-                    textFieldProps={{
-                        helperText: `You meight get ${eth} ${toToken?.symbo}`,
+            <Box className={classes.line} style={{ display: 'block' }}>
+                <ITOExchangeTokenPanel
+                    className={classes.input}
+                    originToken={token}
+                    onTokenAmountChange={setTokenAndAmount}
+                    exchangetokenPanelProps={{
+                        label: 'Swap Ration',
                     }}
                 />
-            </div>
-            <div className={classes.line}>
+            </Box>
+            <Box className={classes.line}>
                 <TextField
                     className={classes.input}
-                    label="Allocation Per Wallet"
-                    required
-                    fullWidth
-                    type="text"
-                    onChange={onAllocationPerWalletChange}
-                    defaultValue="1"
-                    InputProps={{
-                        inputProps: {
-                            autoComplet: 'off',
-                            autoCorrect: 'off',
-                            title: 'Allocation per wallet',
-                            inputMode: 'decimal',
-                            min: 0,
-                            pattern: '^[0-9]*[.,]?[0-9]*$',
-                            placeholder: '0.0',
-                            spellCheck: false,
-                        },
-                        endAdornment: <InputAdornment position="end">{toToken?.symbol ?? ''}</InputAdornment>,
-                    }}
-                />
-                <TextField
-                    className={classes.input}
-                    fullWidth
-                    label="End date"
-                    type="datetime-local"
-                    defaultValue={selectedDate}
-                    onChange={setSelectedDate}
-                    className={classes.textField}
+                    label="Title"
+                    onChange={onMessageChange}
                     InputLabelProps={{
                         shrink: true,
                     }}
                 />
-            </div>
-            <div className={classes.line}>
+            </Box>
+            <Box className={classes.line}>
                 <TextField
-                    fullWidth
                     className={classes.input}
-                    onChange={(e) => setMessage(e.target.value)}
-                    InputLabelProps={{ shrink: true }}
-                    inputProps={{ placeholder: 'Mask' }}
-                    label="Title"
-                    defaultValue="MASK"
+                    label="Allocation per wallet"
+                    onChange={onTotalOfPerWalletChange}
+                    InputProps={{
+                        endAdornment: token?.symbol,
+                        inputProps: {
+                            autoComplete: 'off',
+                            autoCorrect: 'off',
+                            inputMode: 'decimal',
+                            placeholder: '1',
+                            pattern: '^[0-9]$',
+                            spellCheck: false,
+                        },
+                    }}
                 />
-            </div>
-            {!account || !chainIdValid ? (
-                <ActionButton className={classes.button} fullWidth variant="contained" size="large" onClick={onConnect}>
-                    Connect a Wallet
-                </ActionButton>
-            ) : approveRequired ? (
-                <ActionButton
-                    className={classes.button}
-                    fullWidth
-                    variant="contained"
-                    size="large"
-                    disabled={approveState === ApproveState.PENDING}
-                    onClick={onApprove}>
-                    {approveState === ApproveState.NOT_APPROVED ? `Approve ${fromToken.symbol}` : ''}
-                    {approveState === ApproveState.PENDING ? `Approve... ${fromToken.symbol}` : ''}
-                </ActionButton>
-            ) : validationMessage ? (
-                <ActionButton className={classes.button} fullWidth variant="contained" disabled>
-                    {validationMessage}
-                </ActionButton>
-            ) : (
-                <ActionButton className={classes.button} fullWidth onClick={createCallback}>
-                    Send an amount
-                </ActionButton>
-            )}
+            </Box>
+            <Box className={classes.line} style={{ display: 'flex' }}>
+                <div>
+                    <InputLabel className={classes.label}>Begin times (GMT 0) </InputLabel>
+                    <TextField
+                        className={classes.input}
+                        onChange={onDaysChange}
+                        type="datetime-local"
+                        defaultValue={beginTime}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        variant="standard"
+                    />
+                </div>
+                <div>
+                    <InputLabel className={classes.label}>End times (GMT 0) </InputLabel>
+                    <TextField
+                        className={classes.input}
+                        onChange={onHoursChange}
+                        type="datetime-local"
+                        defaultValue={endTime}
+                        InputProps={{
+                            shrink: true,
+                        }}
+                        variant="standard"
+                    />
+                </div>
+            </Box>
+            <Box className={classes.line}>
+                <Grid container direction="row" justifyContent="center" alignItems="center" spacing={2}>
+                    {approveRequired ? (
+                        <Grid item xs={6}>
+                            <ActionButton
+                                className={classes.button}
+                                fullWidth
+                                variant="contained"
+                                size="large"
+                                disabled={approveState === ApproveState.PENDING}
+                                onClick={onApprove}>
+                                {approveState === ApproveState.NOT_APPROVED ? `Approve ${token?.symbol}` : ''}
+                                {approveState === ApproveState.PENDING ? `Approve... ${token?.symbol}` : ''}
+                            </ActionButton>
+                        </Grid>
+                    ) : null}
+
+                    <Grid item xs={approveRequired ? 6 : 12}>
+                        {!account || !chainIdValid ? (
+                            <ActionButton className={classes.button} fullWidth variant="contained" size="large">
+                                Connect a wallet
+                            </ActionButton>
+                        ) : validationMessage ? (
+                            <ActionButton className={classes.button} fullWidth variant="contained" disabled>
+                                {validationMessage}
+                            </ActionButton>
+                        ) : (
+                            <ActionButton className={classes.button} fullWidth onClick={onNext}>
+                                Next
+                            </ActionButton>
+                        )}
+                    </Grid>
+                </Grid>
+            </Box>
+            <ITOConfirmDialog
+                open={confirm}
+                itoSettings={itoSettings}
+                onDecline={ConfirmDialogClose}
+                onSubmit={onITOConfirmDialogSubmit}
+            />
         </>
     )
 }
