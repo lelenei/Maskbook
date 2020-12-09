@@ -18,6 +18,8 @@ import { COTM_PluginDefine } from './COTM/define'
 
 import { ITOPluginDefine } from './ITO/define'
 
+import { ITOPluginDefine } from './ITO/define'
+
 plugins.add(WalletPluginDefine)
 plugins.add(GitcoinPluginDefine)
 plugins.add(RedPacketPluginDefine)
