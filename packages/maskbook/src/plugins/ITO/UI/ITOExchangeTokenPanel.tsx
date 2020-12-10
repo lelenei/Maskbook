@@ -13,6 +13,17 @@ import { useEtherTokenDetailed } from '../../../web3/hooks/useEtherTokenDetailed
 import { v4 as uuid } from 'uuid'
 import { ITO_EXCHANGE_RATION_MAX } from '../constants'
 
+export interface ExchangeTokenAndAmount {
+    amount: string
+    token: EtherTokenDetailed | ERC20TokenDetailed | undefined
+}
+interface ExchangeTokenAndAmountState extends ExchangeTokenAndAmount {
+    id: string
+}
+interface ExchangeTokenAndAmountAction extends ExchangeTokenAndAmount {
+    key: string
+}
+
 const useStyles = makeStyles((theme) =>
     createStyles({
         root: {
@@ -168,34 +179,37 @@ export function ITOExchangeTokenPanel(props: ITOExchangeTokenPanelProps) {
     const [token = etherTokenDetailed, setToken] = useState<EtherTokenDetailed | ERC20TokenDetailed | undefined>()
 
     const [excludeTokensAddress, setexcludeTokensAddress] = useState([])
-    const [exchangeTokenArray, dispatchExchangeTokenArray] = useReducer((state, action) => {
-        switch (action.type) {
-            case 'add':
-                return [
-                    ...state,
-                    {
-                        id: action.key,
-                        token: action.token,
-                        amount: action.amount,
-                    },
-                ]
-            case 'remove':
-                return state.filter((item) => item.id !== action.key)
+    const [exchangeTokenArray, dispatchExchangeTokenArray] = useReducer(
+        (state: ExchangeTokenAndAmountState, action: ExchangeTokenAndAmountAction) => {
+            switch (action.type) {
+                case 'add':
+                    return [
+                        ...state,
+                        {
+                            id: action.key,
+                            token: action.token,
+                            amount: action.amount,
+                        },
+                    ]
+                case 'remove':
+                    return state.filter((item) => item.id !== action.key)
 
-            case 'update_amount': {
-                console.log(action)
+                case 'update_amount': {
+                    console.log(action)
 
-                state = state.map((item) => (item.id === action.key ? { ...item, amount: action.amount } : item))
-                return state
+                    state = state.map((item) => (item.id === action.key ? { ...item, amount: action.amount } : item))
+                    return state
+                }
+
+                case 'update_token': {
+                    return state.map((item) => (item.id === action.key ? { ...item, token: action.token } : item))
+                }
+                default:
+                    return state
             }
-
-            case 'update_token': {
-                return state.map((item) => (item.id === action.key ? { ...item, token: action.token } : item))
-            }
-            default:
-                return state
-        }
-    }, [])
+        },
+        [],
+    )
 
     const onAdd = useCallback(() => {
         if (exchangeTokenArray.length > ITO_EXCHANGE_RATION_MAX) {
